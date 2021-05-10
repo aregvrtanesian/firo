@@ -90,6 +90,7 @@ BITCOIN_TESTS = \
   liblelantus/test/schnorr_test.cpp \
   liblelantus/test/serialize_test.cpp \
   liblelantus/test/sigma_extended_test.cpp \
+  liblelantus/test/hierarchical_test.cpp \
   sigma/test/coin_spend_tests.cpp \
   sigma/test/coin_tests.cpp \
   sigma/test/primitives_tests.cpp \

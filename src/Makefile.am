@@ -694,7 +694,12 @@ liblelantus_a_SOURCES = \
   liblelantus/spend_metadata.h \
   liblelantus/spend_metadata.cpp \
   liblelantus/params.h \
-  liblelantus/params.cpp
+  liblelantus/params.cpp \
+  liblelantus/hierarchical_proof.h \
+  liblelantus/hierarchical_prover.h \
+  liblelantus/hierarchical_prover.cpp \
+  liblelantus/hierarchical_verifier.h \
+  liblelantus/hierarchical_verifier.cpp
 
 libsigma_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) -Werror
 libsigma_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -Werror

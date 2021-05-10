@@ -9,6 +9,7 @@
 #include "schnorr_proof.h"
 #include "innerproduct_proof.h"
 #include "range_proof.h"
+#include "hierarchical_proof.h"
 #include "challenge_generator.h"
 #include "../firo_params.h"
 
