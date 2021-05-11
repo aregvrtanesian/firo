@@ -5,6 +5,9 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <chrono>
+#include <random>
+
 namespace lelantus {
 
 class HierarchicalTests : public LelantusTestingSetup {
@@ -18,7 +21,7 @@ public:
         m_T = _m_T;
         n_M = _n_M;
         m_M = _m_M;
-        if (!((uint64_t)pow(_n_T, _m_T) * (uint64_t)pow(_n_M, _m_M))) {
+        if (!((uint64_t)pow(_n_T, _m_T) * (uint64_t)pow(_n_M, _m_M) == _N)) {
             throw std::invalid_argument("Invalid hierarchical proof parameters");
         }
 
@@ -65,10 +68,19 @@ BOOST_AUTO_TEST_CASE(generate_proofs)
     );
 
 
-    for (auto l : {0, 1, 3, 5, 9, 31}) {
+    // For timing data
+    std::default_random_engine randomizer;
+    std::uniform_int_distribution<int> dist(0,N-1);
+    const int trials = 1000;
+    double prove_total = 0;
+    double verify_total = 0;
+
+    for (int i = 0; i < trials; i++) {
         Scalar v, r;
         v.randomize();
         r.randomize();
+
+        int l = dist(randomizer);
 
         commits[l] = Primitives::double_commit(
             g, Scalar(uint64_t(0)),
@@ -77,6 +89,9 @@ BOOST_AUTO_TEST_CASE(generate_proofs)
         );
 
         HierarchicalProof proof;
+
+        // Prove
+        auto start = std::chrono::steady_clock::now();
         prover.proof(
             commits,
             l,
@@ -84,11 +99,24 @@ BOOST_AUTO_TEST_CASE(generate_proofs)
             r,
             proof
         );
+        auto stop = std::chrono::steady_clock::now();
+        std::chrono::duration<double, std::milli> duration_milliseconds = stop - start;
+        prove_total += duration_milliseconds.count();
+
+        // Verify
+        start = std::chrono::steady_clock::now();
         verifier.verify(
             commits,
             proof
         );
+        stop = std::chrono::steady_clock::now();
+        duration_milliseconds = stop - start;
+        verify_total += duration_milliseconds.count();
     }
+
+    // Report the mean time
+    printf("Mean proving time (%d trials): %f ms\n", trials, prove_total/trials);
+    printf("Mean verification time (%d trials): %f ms\n", trials, verify_total/trials);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
