@@ -15,13 +15,13 @@ public:
     HierarchicalTests() {}
 
 public:
-    void GenerateParams(uint64_t _N, uint64_t _n_T, uint64_t _m_T, uint64_t _n_M, uint64_t _m_M) {
+    void GenerateParams(std::size_t _N, std::size_t _n_T, std::size_t _m_T, std::size_t _n_M, std::size_t _m_M) {
         N = _N;
         n_T = _n_T;
         m_T = _m_T;
         n_M = _n_M;
         m_M = _m_M;
-        if (!((uint64_t)pow(_n_T, _m_T) * (uint64_t)pow(_n_M, _m_M) == _N)) {
+        if (!((std::size_t)pow(_n_T, _m_T) * (std::size_t)pow(_n_M, _m_M) == _N)) {
             throw std::invalid_argument("Invalid hierarchical proof parameters");
         }
 
@@ -38,11 +38,11 @@ public:
     }
 
 public:
-    uint64_t N;
-    uint64_t n_T;
-    uint64_t m_T;
-    uint64_t n_M;
-    uint64_t m_M;
+    std::size_t N;
+    std::size_t n_T;
+    std::size_t m_T;
+    std::size_t n_M;
+    std::size_t m_M;
 
     std::vector<GroupElement> h_gens_T;
     std::vector<GroupElement> h_gens_M;

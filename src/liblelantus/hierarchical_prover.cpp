@@ -8,8 +8,8 @@ HierarchicalProver::HierarchicalProver(
     const GroupElement& h2,
     const std::vector<GroupElement>& h_gens_T,
     const std::vector<GroupElement>& h_gens_M,
-    uint64_t n_T, uint64_t m_T,
-    uint64_t n_M, uint64_t m_M)
+    std::size_t n_T, std::size_t m_T,
+    std::size_t n_M, std::size_t m_M)
     : g_(g)
     , h1_(h1)
     , h2_(h2)
@@ -30,12 +30,12 @@ void HierarchicalProver::proof(
     HierarchicalProof& proof_out)
 {
     // Size parameters
-    const uint64_t T = (int)pow(n_T_, m_T_);
-    const uint64_t M = (int)pow(n_M_, m_M_);
+    const std::size_t T = (std::size_t)pow(n_T_, m_T_);
+    const std::size_t M = (std::size_t)pow(n_M_, m_M_);
 
     // Verify commitment and secret index
-    const uint64_t k = L / M;
-    const uint64_t l = L % M;
+    const std::size_t k = L / M;
+    const std::size_t l = L % M;
     if (!(LelantusPrimitives::double_commit(g_, Scalar(uint64_t(0)), h1_, v, h2_, r) == C[k*M + l])) {
         throw std::invalid_argument("Bad known commitment");
     }
@@ -54,7 +54,7 @@ void HierarchicalProver::proof(
     std::vector<Scalar> v_blinders;
     v_blinders.reserve(M);
     v_blinders.resize(M);
-    for (uint64_t i = 0; i < M; i++) {
+    for (std::size_t i = 0; i < M; i++) {
         r_blinders[i].randomize();
         v_blinders[i].randomize();
     }
@@ -62,7 +62,7 @@ void HierarchicalProver::proof(
     // Build the offset subset
     proof_out.d.reserve(M);
     proof_out.d.resize(M);
-    for (uint64_t i = 0; i < M; i++) {
+    for (std::size_t i = 0; i < M; i++) {
         proof_out.d[i] = C[k*M + i] + h1_*v_blinders[i] + h2_*r_blinders[i];
     }
     transcript->add(proof_out.d);
@@ -80,7 +80,7 @@ void HierarchicalProver::proof(
     std::vector<Scalar> x;
     x.reserve(M);
     x.resize(M);
-    for (uint64_t i = 0; i < M; i++) {
+    for (std::size_t i = 0; i < M; i++) {
         transcript->get_challenge(x[i]);
     }
 
@@ -89,13 +89,13 @@ void HierarchicalProver::proof(
     std::vector<GroupElement> D;
     D.reserve(T);
     D.resize(T);
-    for (uint64_t i = 0; i < T; i++) {
+    for (std::size_t i = 0; i < T; i++) {
         std::vector<GroupElement> C_(C.begin() + i*M, C.begin() + (i + 1)*M);
         D[i] = D_ + digest(x, C_).inverse();
     }
     Scalar v_blinder(uint64_t(0));
     Scalar r_blinder(uint64_t(0));
-    for (uint64_t i = 0; i < M; i++) {
+    for (std::size_t i = 0; i < M; i++) {
         v_blinder += x[i]*v_blinders[i];
         r_blinder += x[i]*r_blinders[i];
     }
@@ -127,10 +127,10 @@ GroupElement HierarchicalProver::digest(
 SigmaExtendedProof HierarchicalProver::build_sigma(
     SigmaExtendedProver& prover,
     unique_ptr<ChallengeGenerator>& transcript,
-    const uint64_t n,
-    const uint64_t m,
+    const std::size_t n,
+    const std::size_t m,
     const std::vector<GroupElement>& commits,
-    const uint64_t l,
+    const std::size_t l,
     const Scalar& v,
     const Scalar& r)
 {

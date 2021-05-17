@@ -16,8 +16,8 @@ public:
         const GroupElement& h2,
         const std::vector<GroupElement>& h_gens_T,
         const std::vector<GroupElement>& h_gens_M,
-        uint64_t n_T, uint64_t m_T,
-        uint64_t n_M, uint64_t m_M);
+        std::size_t n_T, std::size_t m_T,
+        std::size_t n_M, std::size_t m_M);
 
     void proof(
         const std::vector<GroupElement>& C,
@@ -33,10 +33,10 @@ public:
     SigmaExtendedProof build_sigma(
         SigmaExtendedProver& prover,
         unique_ptr<ChallengeGenerator>& transcript,
-        const uint64_t n,
-        const uint64_t m,
+        const std::size_t n,
+        const std::size_t m,
         const std::vector<GroupElement>& commits,
-        const uint64_t l,
+        const std::size_t l,
         const Scalar& v,
         const Scalar& r
     );
@@ -47,10 +47,10 @@ private:
     GroupElement h2_;
     std::vector<GroupElement> h_T_;
     std::vector<GroupElement> h_M_;
-    uint64_t n_T_;
-    uint64_t m_T_;
-    uint64_t n_M_;
-    uint64_t m_M_;
+    std::size_t n_T_;
+    std::size_t m_T_;
+    std::size_t n_M_;
+    std::size_t m_M_;
 };
 
 }//namespace lelantus

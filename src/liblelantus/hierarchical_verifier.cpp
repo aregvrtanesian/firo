@@ -9,8 +9,8 @@ HierarchicalVerifier::HierarchicalVerifier(
     const GroupElement& h2,
     const std::vector<GroupElement>& h_gens_T,
     const std::vector<GroupElement>& h_gens_M,
-    uint64_t n_T, uint64_t m_T,
-    uint64_t n_M, uint64_t m_M)
+    std::size_t n_T, std::size_t m_T,
+    std::size_t n_M, std::size_t m_M)
     : g_(g)
     , h1_(h1)
     , h2_(h2)
@@ -28,8 +28,8 @@ void HierarchicalVerifier::verify(
     HierarchicalProof& proof)
 {
     // Size parameters
-    const uint64_t T = (int)pow(n_T_, m_T_);
-    const uint64_t M = (int)pow(n_M_, m_M_);
+    const std::size_t T = (std::size_t)pow(n_T_, m_T_);
+    const std::size_t M = (std::size_t)pow(n_M_, m_M_);
 
     // Transcript
     unique_ptr<ChallengeGenerator> transcript = std::make_unique<ChallengeGeneratorImpl<CHash256>>(1); 
@@ -79,7 +79,7 @@ void HierarchicalVerifier::verify(
     std::vector<Scalar> x;
     x.reserve(M);
     x.resize(M);
-    for (uint64_t i = 0; i < M; i++) {
+    for (std::size_t i = 0; i < M; i++) {
         transcript->get_challenge(x[i]);
     }
 
@@ -88,7 +88,7 @@ void HierarchicalVerifier::verify(
     std::vector<GroupElement> D;
     D.reserve(T);
     D.resize(T);
-    for (uint64_t i = 0; i < T; i++) {
+    for (std::size_t i = 0; i < T; i++) {
         std::vector<GroupElement> C_(C.begin() + i*M, C.begin() + (i + 1)*M);
         D[i] = D_ + digest(x, C_).inverse();
     }
