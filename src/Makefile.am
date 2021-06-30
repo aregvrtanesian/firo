@@ -672,6 +672,11 @@ liblelantus_a_SOURCES = \
   liblelantus/sigmaextended_prover.cpp \
   liblelantus/sigmaextended_verifier.h \
   liblelantus/sigmaextended_verifier.cpp \
+  liblelantus/triptych_proof.h \
+  liblelantus/triptych_prover.h \
+  liblelantus/triptych_prover.cpp \
+  liblelantus/triptych_verifier.h \
+  liblelantus/triptych_verifier.cpp \
   liblelantus/schnorr_proof.h \
   liblelantus/schnorr_prover.h \
   liblelantus/schnorr_prover.cpp \

@@ -5,6 +5,7 @@
 #include <secp256k1/include/GroupElement.h>
 #include <secp256k1/include/MultiExponent.h>
 #include "sigmaextended_proof.h"
+#include "triptych_proof.h"
 #include "lelantus_proof.h"
 #include "schnorr_proof.h"
 #include "innerproduct_proof.h"
@@ -76,6 +77,16 @@ public:
             const std::vector<GroupElement>& Cout,
             unsigned int version,
             std::unique_ptr<ChallengeGenerator>& challengeGenerator,
+            Scalar& result_out);
+    
+    static void generate_triptych_mu(
+            const TriptychProof& proof,
+            const GroupElement& offset,
+            Scalar& result_out);
+
+    static void generate_triptych_x(
+            const TriptychProof& proof,
+            const Scalar& mu,
             Scalar& result_out);
 
     static void new_factor(const Scalar& x, const Scalar& a, std::vector<Scalar>& coefficients);

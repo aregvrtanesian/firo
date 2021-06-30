@@ -4,6 +4,7 @@
 namespace lelantus {
 
 static std::string lts("LELANTUS_SIGMA");
+static std::string triptych_domain("TRIPTYCH_PROOF");
     
 void LelantusPrimitives::generate_challenge(
         const std::vector<GroupElement>& group_elements,
@@ -87,6 +88,44 @@ std::vector<std::size_t> LelantusPrimitives::convert_to_nal(
     }
     result.resize(m);
     return result;
+}
+
+void LelantusPrimitives::generate_triptych_mu(
+        const TriptychProof& proof,
+        const GroupElement& offset,
+        Scalar& result_out) {
+
+    // WARNING: This does not yet include anonymity set hashes, and therefore is _not_ proper Fiat-Shamir!
+
+    unique_ptr<ChallengeGenerator> challengeGenerator = std::make_unique<ChallengeGeneratorImpl<CHash256>>(1);
+    result_out = uint64_t(1);
+
+    std::vector<unsigned char> pre(triptych_domain.begin(), triptych_domain.end());
+    challengeGenerator->add(pre);
+    challengeGenerator->add(offset);
+    challengeGenerator->add(proof.J_);
+    challengeGenerator->add(proof.K_);
+    challengeGenerator->add(proof.A_);
+    challengeGenerator->add(proof.B_);
+    challengeGenerator->add(proof.C_);
+    challengeGenerator->add(proof.D_);
+
+    challengeGenerator->get_challenge(result_out);
+}
+
+void LelantusPrimitives::generate_triptych_x(
+        const TriptychProof& proof,
+        const Scalar& mu,
+        Scalar& result_out) {
+
+    unique_ptr<ChallengeGenerator> challengeGenerator = std::make_unique<ChallengeGeneratorImpl<CHash256>>(1);
+    result_out = uint64_t(1);
+
+    challengeGenerator->add(mu);
+    challengeGenerator->add(proof.X_);
+    challengeGenerator->add(proof.Y_);
+
+    challengeGenerator->get_challenge(result_out);
 }
 
 void  LelantusPrimitives::generate_Lelantus_challenge(
