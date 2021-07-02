@@ -92,16 +92,16 @@ std::vector<std::size_t> LelantusPrimitives::convert_to_nal(
 
 void LelantusPrimitives::generate_triptych_mu(
         const TriptychProof& proof,
+        const Scalar& input_hash,
         const GroupElement& offset,
         Scalar& result_out) {
-
-    // WARNING: This does not yet include anonymity set hashes, and therefore is _not_ proper Fiat-Shamir!
 
     unique_ptr<ChallengeGenerator> challengeGenerator = std::make_unique<ChallengeGeneratorImpl<CHash256>>(1);
     result_out = uint64_t(1);
 
     std::vector<unsigned char> pre(triptych_domain.begin(), triptych_domain.end());
     challengeGenerator->add(pre);
+    challengeGenerator->add(input_hash);
     challengeGenerator->add(offset);
     challengeGenerator->add(proof.J_);
     challengeGenerator->add(proof.K_);

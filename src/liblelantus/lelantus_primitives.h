@@ -81,6 +81,7 @@ public:
     
     static void generate_triptych_mu(
             const TriptychProof& proof,
+            const Scalar& input_hash,
             const GroupElement& offset,
             Scalar& result_out);
 

@@ -17,6 +17,7 @@ public:
     // In this case, there is an implied input set size
     bool singleverify(const std::vector<GroupElement>& commits,
                      const std::vector<GroupElement>& amount_commits,
+                     const Scalar& input_hash,
                      const GroupElement& offset,
                      const TriptychProof& proof) const;
 
@@ -24,6 +25,7 @@ public:
     // In this case, there is a specified set size
     bool singleverify(const std::vector<GroupElement>& commits,
                      const std::vector<GroupElement>& amount_commits,
+                     const Scalar& input_hash,
                      const GroupElement& offset,
                      const size_t setSize,
                      const TriptychProof& proof) const;
@@ -32,12 +34,14 @@ public:
     // In this case, there is an implied input set size
     bool batchverify(const std::vector<GroupElement>& commits,
                      const std::vector<GroupElement>& amount_commits,
+                     const Scalar& input_hash,
                      const std::vector<GroupElement>& offsets,
                      const std::vector<TriptychProof>& proofs) const;
     // Verify a general batch of one-of-many proofs
     // In this case, each proof has a specified set size
     bool batchverify(const std::vector<GroupElement>& commits,
                      const std::vector<GroupElement>& amount_commits,
+                     const Scalar& input_hash,
                      const std::vector<GroupElement>& offsets,
                      const std::vector<size_t>& setSizes,
                      const std::vector<TriptychProof>& proofs) const;
@@ -46,6 +50,7 @@ private:
     // Utility function that actually performs verification
     bool verify(const std::vector<GroupElement>& commits,
                      const std::vector<GroupElement>& amount_commits,
+                     const Scalar& input_hash,
                      const std::vector<GroupElement>& offsets,
                      const std::vector<size_t>& setSizes,
                      const bool specifiedSetSizes,

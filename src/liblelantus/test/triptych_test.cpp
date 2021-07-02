@@ -1,5 +1,6 @@
 #include "../triptych_prover.h"
 #include "../triptych_verifier.h"
+#include "../challenge_generator_impl.h"
 
 #include "lelantus_test_fixture.h"
 
@@ -51,6 +52,17 @@ public:
         u.randomize();
     }
 
+    Scalar hash(std::vector<GroupElement> commits, std::vector<GroupElement> amount_commits) {
+        std::unique_ptr<ChallengeGenerator> challengeGenerator;
+        challengeGenerator = std::make_unique<ChallengeGeneratorImpl<CHash256>>(1);
+        challengeGenerator->add(commits);
+        challengeGenerator->add(amount_commits);
+
+        Scalar result_out;
+        challengeGenerator->get_challenge(result_out);
+        return result_out;
+    }
+
 public:
     std::size_t N;
     std::size_t n;
@@ -66,32 +78,38 @@ BOOST_FIXTURE_TEST_SUITE(lelantus_triptych_tests, TriptychTests)
 BOOST_AUTO_TEST_CASE(one_out_of_N)
 {
     GenerateParams(8, 2);
+    std::size_t index = 0;
 
-    Secret secret(0);
+    Secret secret(index);
     Prover prover(g, h_gens, u, n, m);
     Verifier verifier(g, h_gens, u, n, m);
 
     auto commits = RandomizeGroupElements(N);
     auto amount_commits = RandomizeGroupElements(N);
+    Scalar input_hash = hash(commits, amount_commits);
 
-    commits[0] = g * secret.r;
-    amount_commits[0] = g * secret.s;
+    commits[index] = g * secret.r;
+    amount_commits[index] = g * secret.s;
 
-    GroupElement offset = g * Scalar(uint64_t(0));
+    Scalar offset_scalar;
+    offset_scalar.randomize();
+    GroupElement offset = g * offset_scalar;
 
     Proof proof;
     prover.triptych_prove(
         commits,
         amount_commits,
+        input_hash,
         offset,
-        0,
+        index,
         secret.r,
-        secret.s,
+        secret.s - offset_scalar,
         proof
     );
     BOOST_CHECK(verifier.singleverify(
         commits,
         amount_commits,
+        input_hash,
         offset,
         proof
     ));
@@ -104,6 +122,7 @@ BOOST_AUTO_TEST_CASE(one_out_of_N_variable_batch)
     std::size_t commit_size = 60; // require padding
     auto commits = RandomizeGroupElements(commit_size);
     auto amount_commits = RandomizeGroupElements(commit_size);
+    Scalar input_hash = hash(commits, amount_commits);
 
     // Generate
     std::vector<Secret> secrets;
@@ -135,6 +154,7 @@ BOOST_AUTO_TEST_CASE(one_out_of_N_variable_batch)
         prover.triptych_prove(
             commits_,
             amount_commits_,
+            input_hash,
             offsets[i],
             secrets[i].l - (commit_size - set_sizes[i]),
             secrets[i].r,
@@ -146,6 +166,7 @@ BOOST_AUTO_TEST_CASE(one_out_of_N_variable_batch)
         BOOST_CHECK(verifier.singleverify(
             commits,
             amount_commits,
+            input_hash,
             offsets[i],
             set_sizes[i],
             proofs[i]
@@ -153,6 +174,7 @@ BOOST_AUTO_TEST_CASE(one_out_of_N_variable_batch)
         BOOST_CHECK(verifier.singleverify(
             commits_,
             amount_commits_,
+            input_hash,
             offsets[i],
             proofs[i]
         ));
@@ -161,6 +183,7 @@ BOOST_AUTO_TEST_CASE(one_out_of_N_variable_batch)
     BOOST_CHECK(verifier.batchverify(
         commits,
         amount_commits,
+        input_hash,
         offsets,
         set_sizes,
         proofs
@@ -173,6 +196,7 @@ BOOST_AUTO_TEST_CASE(one_out_of_N_batch)
 
     auto commits = RandomizeGroupElements(N);
     auto amount_commits = RandomizeGroupElements(N);
+    Scalar input_hash = hash(commits, amount_commits);
 
     // Generate
     std::vector<Secret> secrets;
@@ -200,6 +224,7 @@ BOOST_AUTO_TEST_CASE(one_out_of_N_batch)
         prover.triptych_prove(
             commits,
             amount_commits,
+            input_hash,
             offsets[i],
             secrets[i].l,
             secrets[i].r,
@@ -211,6 +236,7 @@ BOOST_AUTO_TEST_CASE(one_out_of_N_batch)
         BOOST_CHECK(verifier.singleverify(
             commits,
             amount_commits,
+            input_hash,
             offsets[i],
             proofs[i]
         ));
@@ -219,6 +245,7 @@ BOOST_AUTO_TEST_CASE(one_out_of_N_batch)
     BOOST_CHECK(verifier.batchverify(
         commits,
         amount_commits,
+        input_hash,
         offsets,
         proofs
     ));

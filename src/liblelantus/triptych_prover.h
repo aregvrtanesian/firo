@@ -16,6 +16,7 @@ public:
     void triptych_prove(
             const std::vector<GroupElement>& commits,
             const std::vector<GroupElement>& amount_commits,
+            const Scalar& input_hash,
             const GroupElement& offset,
             std::size_t l,
             const Scalar& r,

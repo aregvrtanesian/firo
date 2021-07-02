@@ -21,6 +21,7 @@ TriptychVerifier::TriptychVerifier(
 bool TriptychVerifier::singleverify(
         const std::vector<GroupElement>& commits,
         const std::vector<GroupElement>& amount_commits,
+        const Scalar& input_hash,
         const GroupElement& offset,
         const TriptychProof& proof) const {
     std::vector<GroupElement> offsets = { offset };
@@ -30,6 +31,7 @@ bool TriptychVerifier::singleverify(
     return verify(
         commits,
         amount_commits,
+        input_hash,
         offsets,
         setSizes,
         false,
@@ -42,6 +44,7 @@ bool TriptychVerifier::singleverify(
 bool TriptychVerifier::singleverify(
         const std::vector<GroupElement>& commits,
         const std::vector<GroupElement>& amount_commits,
+        const Scalar& input_hash,
         const GroupElement& offset,
         const size_t setSize,
         const TriptychProof& proof) const {
@@ -52,6 +55,7 @@ bool TriptychVerifier::singleverify(
     return verify(
         commits,
         amount_commits,
+        input_hash,
         offsets,
         setSizes,
         true,
@@ -64,6 +68,7 @@ bool TriptychVerifier::singleverify(
 bool TriptychVerifier::batchverify(
         const std::vector<GroupElement>& commits,
         const std::vector<GroupElement>& amount_commits,
+        const Scalar& input_hash,
         const std::vector<GroupElement>& offsets,
         const std::vector<TriptychProof>& proofs) const {
     std::vector<std::size_t> setSizes = { };
@@ -71,6 +76,7 @@ bool TriptychVerifier::batchverify(
     return verify(
         commits,
         amount_commits,
+        input_hash,
         offsets,
         setSizes,
         false,
@@ -83,6 +89,7 @@ bool TriptychVerifier::batchverify(
 bool TriptychVerifier::batchverify(
         const std::vector<GroupElement>& commits,
         const std::vector<GroupElement>& amount_commits,
+        const Scalar& input_hash,
         const std::vector<GroupElement>& offsets,
         const std::vector<size_t>& setSizes,
         const std::vector<TriptychProof>& proofs) const {
@@ -90,6 +97,7 @@ bool TriptychVerifier::batchverify(
     return verify(
         commits,
         amount_commits,
+        input_hash,
         offsets,
         setSizes,
         true,
@@ -101,6 +109,7 @@ bool TriptychVerifier::batchverify(
 bool TriptychVerifier::verify(
         const std::vector<GroupElement>& commits,
         const std::vector<GroupElement>& amount_commits,
+        const Scalar& input_hash,
         const std::vector<GroupElement>& offsets,
         const std::vector<size_t>& setSizes,
         const bool specifiedSetSizes,
@@ -192,7 +201,7 @@ bool TriptychVerifier::verify(
         // Challenges
         Scalar mu;
         Scalar x;
-        LelantusPrimitives::generate_triptych_mu(proof, offsets[t], mu);
+        LelantusPrimitives::generate_triptych_mu(proof, input_hash, offsets[t], mu);
         LelantusPrimitives::generate_triptych_x(proof, mu, x);
 
         // Generate random verifier weights

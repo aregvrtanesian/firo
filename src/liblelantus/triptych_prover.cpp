@@ -19,6 +19,7 @@ TriptychProver::TriptychProver(
 void TriptychProver::triptych_prove(
         const std::vector<GroupElement>& commits,
         const std::vector<GroupElement>& amount_commits,
+        const Scalar& input_hash,
         const GroupElement& offset,
         std::size_t l,
         const Scalar& r,
@@ -176,7 +177,7 @@ void TriptychProver::triptych_prove(
     proof_out.Y_.reserve(m_);
 
     Scalar mu;
-    LelantusPrimitives::generate_triptych_mu(proof_out, offset, mu);
+    LelantusPrimitives::generate_triptych_mu(proof_out, input_hash, offset, mu);
 
     // Prepare multiexp vectors
     std::vector<GroupElement> X_multiexp_points;
