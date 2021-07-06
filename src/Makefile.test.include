@@ -86,6 +86,7 @@ BITCOIN_TESTS = \
   liblelantus/test/lelantus_test.cpp \
   liblelantus/test/lelantus_test_fixture.cpp \
   liblelantus/test/lelantus_test_fixture.h \
+  liblelantus/test/multiexp_test.cpp \
   liblelantus/test/range_proof_test.cpp \
   liblelantus/test/schnorr_test.cpp \
   liblelantus/test/serialize_test.cpp \
