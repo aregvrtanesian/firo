@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(weights)
     for (std::size_t i = n; i < 2*n; i++) {
         s_long[i] *= c;
     }
-    secp_primitives::MultiExponent mult_right(C, s);
+    secp_primitives::MultiExponent mult_right(A_long, s_long);
     GroupElement right = mult_right.get_multiple();
     stop = std::chrono::steady_clock::now();
     millis = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count();
