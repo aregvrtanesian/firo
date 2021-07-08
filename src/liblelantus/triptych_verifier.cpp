@@ -400,10 +400,10 @@ void TriptychVerifier::compute_batch_fis(
         const std::vector<Scalar>& f,
         const Scalar& w3,
         const Scalar& mu,
-        vector<Scalar>::iterator& ptr_commit,
-        vector<Scalar>::iterator& ptr_amount_commit,
-        vector<Scalar>::iterator start_ptr,
-        vector<Scalar>::iterator end_ptr) const {
+        std::vector<Scalar>::iterator& ptr_commit,
+        std::vector<Scalar>::iterator& ptr_amount_commit,
+        std::vector<Scalar>::iterator start_ptr,
+        std::vector<Scalar>::iterator end_ptr) const {
     j--;
     if (j == -1)
     {

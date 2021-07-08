@@ -96,7 +96,7 @@ void LelantusPrimitives::generate_triptych_mu(
         const GroupElement& offset,
         Scalar& result_out) {
 
-    unique_ptr<ChallengeGenerator> challengeGenerator = std::make_unique<ChallengeGeneratorImpl<CHash256>>(1);
+    std::unique_ptr<ChallengeGenerator> challengeGenerator = std::make_unique<ChallengeGeneratorImpl<CHash256>>(1);
     result_out = uint64_t(1);
 
     std::vector<unsigned char> pre(triptych_domain.begin(), triptych_domain.end());
@@ -118,7 +118,7 @@ void LelantusPrimitives::generate_triptych_x(
         const Scalar& mu,
         Scalar& result_out) {
 
-    unique_ptr<ChallengeGenerator> challengeGenerator = std::make_unique<ChallengeGeneratorImpl<CHash256>>(1);
+    std::unique_ptr<ChallengeGenerator> challengeGenerator = std::make_unique<ChallengeGeneratorImpl<CHash256>>(1);
     result_out = uint64_t(1);
 
     challengeGenerator->add(mu);
