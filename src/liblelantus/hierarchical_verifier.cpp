@@ -32,7 +32,7 @@ void HierarchicalVerifier::verify(
     const std::size_t M = (std::size_t)pow(n_M_, m_M_);
 
     // Transcript
-    unique_ptr<ChallengeGenerator> transcript = std::make_unique<ChallengeGeneratorImpl<CHash256>>(1); 
+    std::unique_ptr<ChallengeGenerator> transcript = std::make_unique<ChallengeGeneratorImpl<CHash256>>(1); 
     std::string domain("Hierarchical proof");
     std::vector<unsigned char> initialize(domain.begin(), domain.end());
     transcript->add(initialize);

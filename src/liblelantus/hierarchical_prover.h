@@ -32,7 +32,7 @@ public:
     
     SigmaExtendedProof build_sigma(
         SigmaExtendedProver& prover,
-        unique_ptr<ChallengeGenerator>& transcript,
+        std::unique_ptr<ChallengeGenerator>& transcript,
         const std::size_t n,
         const std::size_t m,
         const std::vector<GroupElement>& commits,

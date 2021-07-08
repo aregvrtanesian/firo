@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(generate_proofs)
         // Prove
         auto start = std::chrono::steady_clock::now();
 
-        unique_ptr<ChallengeGenerator> transcript = std::make_unique<ChallengeGeneratorImpl<CHash256>>(1); 
+        std::unique_ptr<ChallengeGenerator> transcript = std::make_unique<ChallengeGeneratorImpl<CHash256>>(1); 
         std::string domain("One-of-many proof");
         std::vector<unsigned char> initialize(domain.begin(), domain.end());
         transcript->add(initialize);
