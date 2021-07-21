@@ -700,6 +700,11 @@ liblelantus_a_SOURCES = \
   liblelantus/sigmaextended_prover.cpp \
   liblelantus/sigmaextended_verifier.h \
   liblelantus/sigmaextended_verifier.cpp \
+  liblelantus/parallel_proof.h \
+  liblelantus/parallel_prover.h \
+  liblelantus/parallel_prover.cpp \
+  liblelantus/parallel_verifier.h \
+  liblelantus/parallel_verifier.cpp \
   liblelantus/schnorr_proof.h \
   liblelantus/schnorr_prover.h \
   liblelantus/schnorr_prover.cpp \

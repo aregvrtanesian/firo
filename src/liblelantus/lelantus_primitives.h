@@ -5,6 +5,7 @@
 #include <secp256k1/include/GroupElement.h>
 #include <secp256k1/include/MultiExponent.h>
 #include "sigmaextended_proof.h"
+#include "parallel_proof.h"
 #include "lelantus_proof.h"
 #include "schnorr_proof.h"
 #include "innerproduct_proof.h"
