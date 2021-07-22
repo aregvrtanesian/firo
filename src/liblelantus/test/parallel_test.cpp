@@ -201,9 +201,9 @@ BOOST_AUTO_TEST_CASE(one_out_of_N_batch)
     BOOST_CHECK(verifier.batchverify(commits_S, commits_V, offsets_S, offsets_V, x, proofs));
 
     // verify subset of valid proofs should success also
-    commits_S.pop_back();
-    commits_V.pop_back();
     proofs.pop_back();
+    offsets_S.pop_back();
+    offsets_V.pop_back();
     BOOST_CHECK(verifier.batchverify(commits_S, commits_V, offsets_S, offsets_V, x, proofs));
 }
 
