@@ -20,6 +20,8 @@ ParallelProver::ParallelProver(
 void ParallelProver::parallel_commit(
         const std::vector<GroupElement>& commits_S,
         const std::vector<GroupElement>& commits_V,
+        const GroupElement& offset_S,
+        const GroupElement& offset_V,
         std::size_t l,
         const Scalar& rA,
         const Scalar& rB,
@@ -155,6 +157,14 @@ void ParallelProver::parallel_commit(
 
     P_i_k[setSize - 1] = p_i_sum;
 
+    // Perform the commitment offsets
+    std::vector<GroupElement> commits_S_(commits_S);
+    std::vector<GroupElement> commits_V_(commits_V);
+    for (std::size_t k = 0; k < commits_S_.size(); k++) {
+        commits_S_[k] += offset_S.inverse();
+        commits_V_[k] += offset_V.inverse();
+    }
+
     proof_out.Gk_.reserve(m_);
     proof_out.Qk_.reserve(m_);
     for (std::size_t k = 0; k < m_; ++k)
@@ -166,11 +176,11 @@ void ParallelProver::parallel_commit(
         }
         
         // S
-        secp_primitives::MultiExponent mult_S(commits_S, P_i);
+        secp_primitives::MultiExponent mult_S(commits_S_, P_i);
         proof_out.Gk_.emplace_back(mult_S.get_multiple() + h_ * Sk[k]);
         
         // V
-        secp_primitives::MultiExponent mult_V(commits_V, P_i);
+        secp_primitives::MultiExponent mult_V(commits_V_, P_i);
         proof_out.Qk_.emplace_back(mult_V.get_multiple() + h_ * Vk[k]);
 
     }
@@ -184,8 +194,8 @@ void ParallelProver::parallel_response(
         const Scalar& rB,
         const Scalar& rC,
         const Scalar& rD,
-        const Scalar& v,
         const Scalar& s,
+        const Scalar& v,
         const std::vector<Scalar>& Sk,
         const std::vector<Scalar>& Vk,
         const Scalar& x,

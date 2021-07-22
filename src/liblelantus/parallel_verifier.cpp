@@ -22,19 +22,22 @@ ParallelVerifier::ParallelVerifier(
 bool ParallelVerifier::singleverify(
         const std::vector<GroupElement>& commits_S,
         const std::vector<GroupElement>& commits_V,
+        const GroupElement& offset_S,
+        const GroupElement& offset_V,
         const Scalar& x,
-        const Scalar& serial,
         const ParallelProof& proof) const {
     std::vector<Scalar> challenges = { x };
-    std::vector<Scalar> serials = { serial };
+    std::vector<GroupElement> offsets_S = { offset_S };
+    std::vector<GroupElement> offsets_V = { offset_V };
     std::vector<std::size_t> setSizes = { };
     std::vector<ParallelProof> proofs = { proof };
 
     return verify(
         commits_S,
         commits_V,
+        offsets_S,
+        offsets_V,
         challenges,
-        serials,
         setSizes,
         true,
         false,
@@ -47,20 +50,23 @@ bool ParallelVerifier::singleverify(
 bool ParallelVerifier::singleverify(
         const std::vector<GroupElement>& commits_S,
         const std::vector<GroupElement>& commits_V,
+        const GroupElement& offset_S,
+        const GroupElement& offset_V,
         const Scalar& x,
-        const Scalar& serial,
         const std::size_t setSize,
         const ParallelProof& proof) const {
     std::vector<Scalar> challenges = { x };
-    std::vector<Scalar> serials = { serial };
+    std::vector<GroupElement> offsets_S = { offset_S };
+    std::vector<GroupElement> offsets_V = { offset_V };
     std::vector<std::size_t> setSizes = { setSize };
     std::vector<ParallelProof> proofs = { proof };
 
     return verify(
         commits_S,
         commits_V,
+        offsets_S,
+        offsets_V,
         challenges,
-        serials,
         setSizes,
         true,
         true,
@@ -73,8 +79,9 @@ bool ParallelVerifier::singleverify(
 bool ParallelVerifier::batchverify(
         const std::vector<GroupElement>& commits_S,
         const std::vector<GroupElement>& commits_V,
+        const std::vector<GroupElement>& offsets_S,
+        const std::vector<GroupElement>& offsets_V,
         const Scalar& x,
-        const std::vector<Scalar>& serials,
         const std::vector<ParallelProof>& proofs) const {
     std::vector<Scalar> challenges = { x };
     std::vector<std::size_t> setSizes = { };
@@ -82,8 +89,9 @@ bool ParallelVerifier::batchverify(
     return verify(
         commits_S,
         commits_V,
+        offsets_S,
+        offsets_V,
         challenges,
-        serials,
         setSizes,
         true,
         false,
@@ -96,16 +104,18 @@ bool ParallelVerifier::batchverify(
 bool ParallelVerifier::batchverify(
         const std::vector<GroupElement>& commits_S,
         const std::vector<GroupElement>& commits_V,
+        const std::vector<GroupElement>& offsets_S,
+        const std::vector<GroupElement>& offsets_V,
         const std::vector<Scalar>& challenges,
-        const std::vector<Scalar>& serials,
         const std::vector<std::size_t>& setSizes,
         const std::vector<ParallelProof>& proofs) const {
 
     return verify(
         commits_S,
         commits_V,
+        offsets_S,
+        offsets_V,
         challenges,
-        serials,
         setSizes,
         false,
         true,
@@ -117,8 +127,9 @@ bool ParallelVerifier::batchverify(
 bool ParallelVerifier::verify(
         const std::vector<GroupElement>& commits_S,
         const std::vector<GroupElement>& commits_V,
+        const std::vector<GroupElement>& offsets_S,
+        const std::vector<GroupElement>& offsets_V,
         const std::vector<Scalar>& challenges,
-        const std::vector<Scalar>& serials,
         const std::vector<std::size_t>& setSizes,
         const bool commonChallenge,
         const bool specifiedSetSizes,
@@ -147,8 +158,8 @@ bool ParallelVerifier::verify(
         LogPrintf("Generator vector size is invalid");
         return false;
     }
-    if (serials.size() != M) {
-        LogPrintf("Invalid number of serials provided");
+    if (offsets_S.size() != M || offsets_V.size() != M) {
+        LogPrintf("Invalid number of offsets provided");
         return false;
     }
 
@@ -266,16 +277,16 @@ bool ParallelVerifier::verify(
         // Input sets
         h_scalar += (proof.zS_ + bind_weight * proof.zV_) * w3.negate();
 
+        Scalar f_sum;
         Scalar f_i(uint64_t(1));
-        Scalar e;
         std::vector<Scalar>::iterator ptr;
         if (!specifiedSetSizes) {
             ptr = commit_scalars.begin();
-            compute_batch_fis(f_i, m, f_, w3, e, ptr, ptr, ptr + setSize - 1);
+            compute_batch_fis(f_sum, f_i, m, f_, w3, ptr, ptr, ptr + setSize - 1);
         }
         else {
             ptr = commit_scalars.begin() + commits.size() - setSize;
-            compute_batch_fis(f_i, m, f_, w3, e, ptr, ptr, ptr + setSize - 1);
+            compute_batch_fis(f_sum, f_i, m, f_, w3, ptr, ptr, ptr + setSize - 1);
         }
 
         Scalar pow(uint64_t(1));
@@ -294,12 +305,14 @@ bool ParallelVerifier::verify(
             xj.go_next();
         }
 
+        f_sum += pow;
         commit_scalars[commits.size() - 1] += pow * w3;
-        e += pow;
 
-        e *= serials[t] * w3.negate();
-        g_scalar += e;
+        // offsets
+        points.emplace_back(offsets_S[t] + offsets_V[t] * bind_weight);
+        scalars.emplace_back(f_sum * w3.negate());
 
+        // (Gk), (Qk)
         NthPower x_k(x);
         for (std::size_t k = 0; k < m; k++) {
             points.emplace_back(proof.Gk_[k] + proof.Qk_[k] * bind_weight);
@@ -423,11 +436,11 @@ void ParallelVerifier::compute_fis(
 }
 
 void ParallelVerifier::compute_batch_fis(
+        Scalar& f_sum,
         const Scalar& f_i,
         int j,
         const std::vector<Scalar>& f,
         const Scalar& y,
-        Scalar& e,
         std::vector<Scalar>::iterator& ptr,
         std::vector<Scalar>::iterator start_ptr,
         std::vector<Scalar>::iterator end_ptr) const {
@@ -436,7 +449,7 @@ void ParallelVerifier::compute_batch_fis(
     {
         if(ptr >= start_ptr && ptr < end_ptr){
             *ptr++ += f_i * y;
-            e += f_i;
+            f_sum += f_i;
         }
         return;
     }
@@ -448,7 +461,7 @@ void ParallelVerifier::compute_batch_fis(
         t = f[j * n + i];
         t *= f_i;
 
-        compute_batch_fis(t, j, f, y, e, ptr, start_ptr, end_ptr);
+        compute_batch_fis(f_sum, t, j, f, y, ptr, start_ptr, end_ptr);
     }
 }
 

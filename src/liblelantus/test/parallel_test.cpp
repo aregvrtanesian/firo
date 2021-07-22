@@ -13,13 +13,14 @@ public:
     public:
         Secret(std::size_t l) : l(l) {
             s.randomize();
+            s1.randomize();
             v.randomize();
-            r.randomize();
+            v1.randomize();
         }
 
     public:
         std::size_t l;
-        Scalar s, v, r;
+        Scalar s, s1, v, v1, r;
     };
 
 public:
@@ -50,22 +51,16 @@ public:
 
     void GenerateBatchProof(
         Prover &prover,
-        std::vector<GroupElement> const &coins_S,
-        std::vector<GroupElement> const &coins_V,
+        std::vector<GroupElement> const &commits_S,
+        std::vector<GroupElement> const &commits_V,
+        const GroupElement &offset_S,
+        const GroupElement &offset_V,
         std::size_t l,
         Scalar const &s,
         Scalar const &v,
-        Scalar const &r,
         Scalar const &x,
         Proof &proof
     ) {
-        auto gs = g * s.negate();
-        std::vector<GroupElement> commits_S(coins_S.begin(), coins_S.end());
-        std::vector<GroupElement> commits_V(coins_V.begin(), coins_V.end());
-        for (auto &c : commits_S) {
-            c += gs;
-        }
-
         Scalar rA, rB, rC, rD;
         rA.randomize();
         rB.randomize();
@@ -81,10 +76,10 @@ public:
         a.resize(n * m);
 
         prover.parallel_commit(
-            commits_S, commits_V, l, rA, rB, rC, rD, a, Sk, Vk, sigma, proof);
+            commits_S, commits_V, offset_S, offset_V, l, rA, rB, rC, rD, a, Sk, Vk, sigma, proof);
 
         prover.parallel_response(
-            sigma, a, rA, rB, rC, rD, v, r, Sk, Vk, x, proof);
+            sigma, a, rA, rB, rC, rD, s, v, Sk, Vk, x, proof);
     }
 
 public:
@@ -117,42 +112,45 @@ BOOST_AUTO_TEST_CASE(one_out_of_N_variable_batch)
 
         auto &s = secrets.back();
 
-        commits_S[index] = g * s.s + h * s.r;
+        commits_S[index] = h * s.s;
         commits_V[index] = h * s.v;
     }
 
     Prover prover(g, h, h_gens, n, m);
     Verifier verifier(g, h, h_gens, n, m);
     std::vector<Proof> proofs;
-    std::vector<Scalar> serials;
+    std::vector<GroupElement> offsets_S;
+    std::vector<GroupElement> offsets_V;
     std::vector<Scalar> challenges;
 
     for (std::size_t i = 0; i < indexes.size(); i++) {
         Scalar x;
         x.randomize();
         proofs.emplace_back();
-        serials.push_back(secrets[i].s);
+        offsets_S.emplace_back(h * secrets[i].s1);
+        offsets_V.emplace_back(h * secrets[i].v1);
         std::vector<GroupElement> commits_S_(commits_S.begin() + commit_size - set_sizes[i], commits_S.end());
         std::vector<GroupElement> commits_V_(commits_V.begin() + commit_size - set_sizes[i], commits_V.end());
         GenerateBatchProof(
             prover,
             commits_S_,
             commits_V_,
+            offsets_S[i],
+            offsets_V[i],
             secrets[i].l - (commit_size - set_sizes[i]),
-            secrets[i].s,
-            secrets[i].v,
-            secrets[i].r,
+            secrets[i].s - secrets[i].s1,
+            secrets[i].v - secrets[i].v1,
             x,
             proofs.back()
         );
         challenges.emplace_back(x);
 
         // Verify individual proofs as a sanity check
-        BOOST_CHECK(verifier.singleverify(commits_S, commits_V, x, secrets[i].s, set_sizes[i], proofs.back()));
-        BOOST_CHECK(verifier.singleverify(commits_S_, commits_V_, x, secrets[i].s, proofs.back()));
+        BOOST_CHECK(verifier.singleverify(commits_S, commits_V, offsets_S[i], offsets_V[i], x, set_sizes[i], proofs.back()));
+        BOOST_CHECK(verifier.singleverify(commits_S_, commits_V_, offsets_S[i], offsets_V[i], x, proofs.back()));
     }
 
-    BOOST_CHECK(verifier.batchverify(commits_S, commits_V, challenges, serials, set_sizes, proofs));
+    BOOST_CHECK(verifier.batchverify(commits_S, commits_V, offsets_S, offsets_V, challenges, set_sizes, proofs));
 }
 
 BOOST_AUTO_TEST_CASE(one_out_of_N_batch)
@@ -170,31 +168,43 @@ BOOST_AUTO_TEST_CASE(one_out_of_N_batch)
 
         auto &s = secrets.back();
 
-        commits_S[index] = g * s.s + h * s.r;
+        commits_S[index] = h * s.s;
         commits_V[index] = h * s.v;
     }
 
     Prover prover(g, h, h_gens, n, m);
     std::vector<Proof> proofs;
-    std::vector<Scalar> serials;
+    std::vector<GroupElement> offsets_S;
+    std::vector<GroupElement> offsets_V;
 
     Scalar x;
     x.randomize();
 
     for (auto const &s : secrets) {
         proofs.emplace_back();
-        serials.push_back(s.s);
+        offsets_S.emplace_back(h * s.s1);
+        offsets_V.emplace_back(h * s.v1);
         GenerateBatchProof(
-            prover, commits_S, commits_V, s.l, s.s, s.v, s.r, x, proofs.back());
+            prover,
+            commits_S,
+            commits_V,
+            offsets_S.back(),
+            offsets_V.back(),
+            s.l,
+            s.s - s.s1,
+            s.v - s.v1,
+            x,
+            proofs.back());
     }
 
     Verifier verifier(g, h, h_gens, n, m);
-    BOOST_CHECK(verifier.batchverify(commits_S, commits_V, x, serials, proofs));
+    BOOST_CHECK(verifier.batchverify(commits_S, commits_V, offsets_S, offsets_V, x, proofs));
 
     // verify subset of valid proofs should success also
-    serials.pop_back();
+    commits_S.pop_back();
+    commits_V.pop_back();
     proofs.pop_back();
-    BOOST_CHECK(verifier.batchverify(commits_S, commits_V, x, serials, proofs));
+    BOOST_CHECK(verifier.batchverify(commits_S, commits_V, offsets_S, offsets_V, x, proofs));
 }
 
 BOOST_AUTO_TEST_CASE(one_out_of_N_batch_with_some_invalid_proof)
@@ -212,32 +222,44 @@ BOOST_AUTO_TEST_CASE(one_out_of_N_batch_with_some_invalid_proof)
 
         auto &s = secrets.back();
 
-        commits_S[index] = g * s.s + h * s.r;
+        commits_S[index] = h * s.s;
         commits_V[index] = h * s.v;
     }
 
     Prover prover(g, h, h_gens, n, m);
     std::vector<Proof> proofs;
-    std::vector<Scalar> serials;
+    std::vector<GroupElement> offsets_S;
+    std::vector<GroupElement> offsets_V;
 
     Scalar x;
     x.randomize();
 
     for (auto const &s : secrets) {
         proofs.emplace_back();
-        serials.push_back(s.s);
+        offsets_S.emplace_back(h * s.s1);
+        offsets_V.emplace_back(h * s.v1);
         GenerateBatchProof(
-            prover, commits_S, commits_V, s.l, s.s, s.v, s.r, x, proofs.back());
+            prover,
+            commits_S,
+            commits_V,
+            offsets_S.back(),
+            offsets_V.back(),
+            s.l,
+            s.s - s.s1,
+            s.v - s.v1,
+            x,
+            proofs.back());
     }
 
     // Add an invalid
     proofs.push_back(proofs.back());
 
-    serials.emplace_back(serials.back());
-    serials.back().randomize();
+    offsets_S.emplace_back(offsets_S.back());
+    offsets_V.emplace_back(offsets_V.back());
+    offsets_S.back().randomize();
 
     Verifier verifier(g, h, h_gens, n, m);
-    BOOST_CHECK(!verifier.batchverify(commits_S, commits_V, x, serials, proofs));
+    BOOST_CHECK(!verifier.batchverify(commits_S, commits_V, offsets_S, offsets_V, x, proofs));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

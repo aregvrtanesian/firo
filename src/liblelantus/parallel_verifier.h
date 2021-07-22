@@ -17,16 +17,18 @@ public:
     // In this case, there is an implied input set size
     bool singleverify(const std::vector<GroupElement>& commits_S,
                      const std::vector<GroupElement>& commits_V,
+                     const GroupElement& offset_S,
+                     const GroupElement& offset_V,
                      const Scalar& x,
-                     const Scalar& serial,
                      const ParallelProof& proof) const;
 
     // Verify a single one-of-many proof
     // In this case, there is a specified set size
     bool singleverify(const std::vector<GroupElement>& commits_S,
                      const std::vector<GroupElement>& commits_V,
+                     const GroupElement& offset_S,
+                     const GroupElement& offset_V,
                      const Scalar& x,
-                     const Scalar& serial,
                      const size_t setSize,
                      const ParallelProof& proof) const;
 
@@ -34,15 +36,17 @@ public:
     // In this case, there is a single common challenge and implied input set size
     bool batchverify(const std::vector<GroupElement>& commits_S,
                      const std::vector<GroupElement>& commits_V,
+                     const std::vector<GroupElement>& offsets_S,
+                     const std::vector<GroupElement>& offsets_V,
                      const Scalar& x,
-                     const std::vector<Scalar>& serials,
                      const std::vector<ParallelProof>& proofs) const;
     // Verify a general batch of one-of-many proofs
     // In this case, each proof has a separate challenge and specified set size
     bool batchverify(const std::vector<GroupElement>& commits_S,
                      const std::vector<GroupElement>& commits_V,
+                     const std::vector<GroupElement>& offsets_S,
+                     const std::vector<GroupElement>& offsets_V,
                      const std::vector<Scalar>& challenges,
-                     const std::vector<Scalar>& serials,
                      const std::vector<size_t>& setSizes,
                      const std::vector<ParallelProof>& proofs) const;
 
@@ -50,8 +54,9 @@ private:
     // Utility function that actually performs verification
     bool verify(const std::vector<GroupElement>& commits_S,
                      const std::vector<GroupElement>& commits_V,
+                     const std::vector<GroupElement>& offsets_S,
+                     const std::vector<GroupElement>& offsets_V,
                      const std::vector<Scalar>& challenges,
-                     const std::vector<Scalar>& serials,
                      const std::vector<size_t>& setSizes,
                      const bool commonChallenge,
                      const bool specifiedSetSizes,
@@ -71,11 +76,11 @@ private:
             std::vector<Scalar>::iterator& ptr,
             std::vector<Scalar>::iterator end_ptr) const;
     void compute_batch_fis(
+            Scalar& f_sum,
             const Scalar& f_i,
             int j,
             const std::vector<Scalar>& f,
             const Scalar& y,
-            Scalar& e,
             std::vector<Scalar>::iterator& ptr,
             std::vector<Scalar>::iterator start_ptr,
             std::vector<Scalar>::iterator end_ptr) const;

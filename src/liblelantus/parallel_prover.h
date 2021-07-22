@@ -14,6 +14,8 @@ public:
     void parallel_commit(
             const std::vector<GroupElement>& commits_S,
             const std::vector<GroupElement>& commits_V,
+            const GroupElement& offset_S,
+            const GroupElement& offset_V,
             std::size_t l,
             const Scalar& rA,
             const Scalar& rB,
@@ -32,8 +34,8 @@ public:
             const Scalar& rB,
             const Scalar& rC,
             const Scalar& rD,
-            const Scalar& v,
             const Scalar& s,
+            const Scalar& v,
             const std::vector<Scalar>& Sk,
             const std::vector<Scalar>& Vk,
             const Scalar& x,
