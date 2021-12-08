@@ -698,7 +698,10 @@ libspark_a_SOURCES = \
   libspark/schnorr.cpp \
   libspark/chaum_proof.h \
   libspark/chaum.h \
-  libspark/chaum.cpp
+  libspark/chaum.cpp \
+  libspark/bpplus_proof.h \
+  libspark/bpplus.h \
+  libspark/bpplus.cpp
 
 liblelantus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 liblelantus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
