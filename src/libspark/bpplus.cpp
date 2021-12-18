@@ -97,15 +97,28 @@ void BPPlus::prove(
     // Compute A
     Scalar alpha;
     alpha.randomize();
-    proof.A = G*alpha;
+
+    std::vector<GroupElement> A_points;
+    std::vector<Scalar> A_scalars;
+    A_points.reserve(2*N*M + 1);
+    A_points.reserve(2*N*M + 1);
+
+    A_points.emplace_back(G);
+    A_scalars.emplace_back(alpha);
     for (std::size_t i = 0; i < N*M; i++) {
-        proof.A += Gi[i]*aL[i] + Hi[i]*aR[i];
+        A_points.emplace_back(Gi[i]);
+        A_scalars.emplace_back(aL[i]);
+        A_points.emplace_back(Hi[i]);
+        A_scalars.emplace_back(aR[i]);
     }
+    secp_primitives::MultiExponent A_multiexp(A_points, A_scalars);
+    proof.A = A_multiexp.get_multiple();
     transcript.add("A", proof.A);
 
     // Challenges
     Scalar y = transcript.challenge();
     Scalar z = transcript.challenge();
+    Scalar z_square = z.square();
 
     // Challenge powers
     std::vector<Scalar> y_powers;
@@ -119,13 +132,13 @@ void BPPlus::prove(
     // Compute d
     std::vector<Scalar> d;
     d.resize(M*N);
-    d[0] = z.square();
+    d[0] = z_square;
     for (std::size_t i = 1; i < N; i++) {
         d[i] = TWO*d[i-1];
     }
     for (std::size_t j = 1; j < M; j++) {
         for (std::size_t i = 0; i < N; i++) {
-            d[j*N+i] = d[(j-1)*N+i]*z.square();
+            d[j*N+i] = d[(j-1)*N+i]*z_square;
         }
     }
 
@@ -140,7 +153,7 @@ void BPPlus::prove(
     Scalar alpha1 = alpha;
     Scalar z_even_powers = 1;
     for (std::size_t j = 0; j < M; j++) {
-        z_even_powers *= z.square();
+        z_even_powers *= z_square;
         alpha1 += z_even_powers*r[j]*y_powers[N*M+1];
     }
 
@@ -167,13 +180,37 @@ void BPPlus::prove(
 
         // Compute L, R
         GroupElement L_, R_;
+        std::vector<GroupElement> L_points, R_points;
+        std::vector<Scalar> L_scalars, R_scalars;
+        L_points.reserve(2*N1 + 2);
+        R_points.reserve(2*N1 + 2);
+        L_scalars.reserve(2*N1 + 2);
+        R_scalars.reserve(2*N1 + 2);
         Scalar y_N1_inverse = y_powers[N1].inverse();
         for (std::size_t i = 0; i < N1; i++) {
-            L_ += Gi1[i+N1]*(a1[i]*y_N1_inverse) + Hi1[i]*b1[i+N1];
-            R_ += Gi1[i]*(a1[i+N1]*y_powers[N1]) + Hi1[i+N1]*b1[i];
+            L_points.emplace_back(Gi1[i+N1]);
+            L_scalars.emplace_back(a1[i]*y_N1_inverse);
+            L_points.emplace_back(Hi1[i]);
+            L_scalars.emplace_back(b1[i+N1]);
+
+            R_points.emplace_back(Gi1[i]);
+            R_scalars.emplace_back(a1[i+N1]*y_powers[N1]);
+            R_points.emplace_back(Hi1[i+N1]);
+            R_scalars.emplace_back(b1[i]);
         }
-        L_ += H*cL + G*dL;
-        R_ += H*cR + G*dR;
+        L_points.emplace_back(H);
+        L_scalars.emplace_back(cL);
+        L_points.emplace_back(G);
+        L_scalars.emplace_back(dL);
+        R_points.emplace_back(H);
+        R_scalars.emplace_back(cR);
+        R_points.emplace_back(G);
+        R_scalars.emplace_back(dR);
+
+        secp_primitives::MultiExponent L_multiexp(L_points, L_scalars);
+        secp_primitives::MultiExponent R_multiexp(R_points, R_scalars);
+        L_ = L_multiexp.get_multiple();
+        R_ = R_multiexp.get_multiple();
         proof.L.emplace_back(L_);
         proof.R.emplace_back(R_);
 
@@ -309,6 +346,7 @@ bool BPPlus::verify(const std::vector<std::vector<GroupElement>>& C, const std::
         Scalar y_NM_1 = y_NM*y;
 
         Scalar z = transcript.challenge();
+        Scalar z_square = z.square();
 
         std::vector<Scalar> e;
         std::vector<Scalar> e_inverse;
@@ -322,9 +360,10 @@ bool BPPlus::verify(const std::vector<std::vector<GroupElement>>& C, const std::
         transcript.add("A1", proof.A1);
         transcript.add("B", proof.B);
         Scalar e1 = transcript.challenge();
+        Scalar e1_square = e1.square();
 
         // C_j: -e1**2 * z**(2*(j + 1)) * y**(N*M + 1) * w
-        Scalar C_scalar = e1.square().negate()*z.square()*y_NM_1*w;
+        Scalar C_scalar = e1_square.negate()*z_square*y_NM_1*w;
         for (std::size_t j = 0; j < M; j++) {
             points.emplace_back(C[k_proofs][j]);
             scalars.emplace_back(C_scalar);
@@ -342,7 +381,7 @@ bool BPPlus::verify(const std::vector<std::vector<GroupElement>>& C, const std::
 
         // A: -w*e1**2
         points.emplace_back(proof.A);
-        scalars.emplace_back(w.negate()*e1.square());
+        scalars.emplace_back(w.negate()*e1_square);
 
         // G: w*d1
         G_scalar += w*proof.d1;
@@ -350,18 +389,18 @@ bool BPPlus::verify(const std::vector<std::vector<GroupElement>>& C, const std::
         // Compute d
         std::vector<Scalar> d;
         d.resize(N*M);
-        d[0] = z.square();
+        d[0] = z_square;
         for (std::size_t i = 1; i < N; i++) {
             d[i] = d[i-1] + d[i-1];
         }
         for (std::size_t j = 1; j < M; j++) {
             for (std::size_t i = 0; i < N; i++) {
-                d[j*N + i] = d[(j - 1)*N + i]*z.square();
+                d[j*N + i] = d[(j - 1)*N + i]*z_square;
             }
         }
 
         // Sum the elements of d
-        Scalar sum_d = z.square();
+        Scalar sum_d = z_square;
         Scalar temp_z = sum_d;
         std::size_t temp_2M = 2*M;
         while (temp_2M > 2) {
@@ -380,7 +419,7 @@ bool BPPlus::verify(const std::vector<std::vector<GroupElement>>& C, const std::
         }
 
         // H: w*(r1*y*s1 + e1**2*(y**(N*M + 1)*z*sum_d + (z**2-z)*sum_y))
-        H_scalar += w*(proof.r1*y*proof.s1 + e1.square()*(y_NM_1*z*sum_d + (z.square() - z)*sum_y));
+        H_scalar += w*(proof.r1*y*proof.s1 + e1_square*(y_NM_1*z*sum_d + (z_square - z)*sum_y));
 
         // Track some iterated exponential terms
         Scalar iter_y_inv = ONE; // y.inverse()**i
@@ -401,10 +440,10 @@ bool BPPlus::verify(const std::vector<std::vector<GroupElement>>& C, const std::
             }
 
             // Gi
-            scalars[2*i] += w*(g + e1.square()*z);
+            scalars[2*i] += w*(g + e1_square*z);
             
             // Hi
-            scalars[2*i+1] += w*(h - e1.square()*(d[i]*iter_y_NM+z));
+            scalars[2*i+1] += w*(h - e1_square*(d[i]*iter_y_NM+z));
 
             // Update the iterated values
             iter_y_inv *= y_inverse;
@@ -414,9 +453,9 @@ bool BPPlus::verify(const std::vector<std::vector<GroupElement>>& C, const std::
         // L, R
         for (std::size_t j = 0; j < rounds; j++) {
             points.emplace_back(proof.L[j]);
-            scalars.emplace_back(w*(e1.square().negate()*e[j].square()));
+            scalars.emplace_back(w*(e1_square.negate()*e[j].square()));
             points.emplace_back(proof.R[j]);
-            scalars.emplace_back(w*(e1.square().negate()*e_inverse[j].square()));
+            scalars.emplace_back(w*(e1_square.negate()*e_inverse[j].square()));
         }
     }
 
