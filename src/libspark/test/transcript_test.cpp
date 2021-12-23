@@ -12,12 +12,24 @@ BOOST_AUTO_TEST_CASE(init)
     // Identical domain separators
     Transcript transcript_1("Spam");
     Transcript transcript_2("Spam");
-    BOOST_CHECK_EQUAL(transcript_1.challenge(), transcript_2.challenge());
+    BOOST_CHECK_EQUAL(transcript_1.challenge("x"), transcript_2.challenge("x"));
 
     // Distinct domain separators
     transcript_1 = Transcript("Spam");
     transcript_2 = Transcript("Eggs");
-    BOOST_CHECK_NE(transcript_1.challenge(), transcript_2.challenge());
+    BOOST_CHECK_NE(transcript_1.challenge("x"), transcript_2.challenge("x"));
+}
+
+BOOST_AUTO_TEST_CASE(challenge_labels)
+{
+    Transcript transcript_1("Spam");
+    Transcript transcript_2("Spam");
+
+    // Identical challenge labels
+    BOOST_CHECK_EQUAL(transcript_1.challenge("x"), transcript_2.challenge("x"));
+
+    // Distinct challenge labels
+    BOOST_CHECK_NE(transcript_1.challenge("x"), transcript_2.challenge("y"));
 }
 
 BOOST_AUTO_TEST_CASE(add_types)
@@ -29,12 +41,12 @@ BOOST_AUTO_TEST_CASE(add_types)
     Scalar scalar;
     scalar.randomize();
     transcript.add("Scalar", scalar);
-    Scalar ch_1 = transcript.challenge();
+    Scalar ch_1 = transcript.challenge("x");
     
     GroupElement group;
     group.randomize();
     transcript.add("Group", group);
-    Scalar ch_2 = transcript.challenge();
+    Scalar ch_2 = transcript.challenge("x");
     BOOST_CHECK_NE(ch_1, ch_2);
 
     std::vector<Scalar> scalars;
@@ -42,7 +54,7 @@ BOOST_AUTO_TEST_CASE(add_types)
         scalar.randomize();
         scalars.emplace_back(scalar);
     }
-    Scalar ch_3 = transcript.challenge();
+    Scalar ch_3 = transcript.challenge("x");
     BOOST_CHECK_NE(ch_2, ch_3);
 
     std::vector<GroupElement> groups;
@@ -50,25 +62,42 @@ BOOST_AUTO_TEST_CASE(add_types)
         group.randomize();
         groups.emplace_back(group);
     }
-    Scalar ch_4 = transcript.challenge();
+    Scalar ch_4 = transcript.challenge("x");
     BOOST_CHECK_NE(ch_3, ch_4);
 
     const std::string data = "Arbitrary string";
     const std::vector<unsigned char> data_char(data.begin(), data.end());
     transcript.add("Data", data_char);
-    Scalar ch_5 = transcript.challenge();
+    Scalar ch_5 = transcript.challenge("x");
     BOOST_CHECK_NE(ch_4, ch_5);
 }
 
 BOOST_AUTO_TEST_CASE(repeated_challenge)
 {
-    // Repeated challenges must be distinct
+    // Repeated challenges must be distinct, even with the same label
     Transcript transcript("Eggs");
 
-    Scalar ch_1 = transcript.challenge();
-    Scalar ch_2 = transcript.challenge();
+    Scalar ch_1 = transcript.challenge("x");
+    Scalar ch_2 = transcript.challenge("x");
 
     BOOST_CHECK_NE(ch_1, ch_2);
+}
+
+BOOST_AUTO_TEST_CASE(repeated_challenge_ordering)
+{
+    // Repeated challenges must respect ordering
+    Transcript prover("Spam");
+    Transcript verifier("Spam");
+
+    Scalar prover_x = prover.challenge("x");
+    Scalar prover_y = prover.challenge("y");
+
+    // Oh no, we mixed up the order
+    Scalar verifier_y = verifier.challenge("y");
+    Scalar verifier_x = verifier.challenge("x");
+
+    BOOST_CHECK_NE(prover_x, verifier_x);
+    BOOST_CHECK_NE(prover_y, verifier_y);
 }
 
 BOOST_AUTO_TEST_CASE(identical_transcripts)
@@ -87,7 +116,7 @@ BOOST_AUTO_TEST_CASE(identical_transcripts)
     prover.add("Group", group);
     verifier.add("Group", group);
 
-    BOOST_CHECK_EQUAL(prover.challenge(), verifier.challenge());
+    BOOST_CHECK_EQUAL(prover.challenge("x"), verifier.challenge("x"));
 }
 
 BOOST_AUTO_TEST_CASE(distinct_values)
@@ -104,7 +133,7 @@ BOOST_AUTO_TEST_CASE(distinct_values)
     prover.add("Scalar", prover_scalar);
     verifier.add("Scalar", verifier_scalar);
 
-    BOOST_CHECK_NE(prover.challenge(), verifier.challenge());
+    BOOST_CHECK_NE(prover.challenge("x"), verifier.challenge("x"));
 }
 
 BOOST_AUTO_TEST_CASE(distinct_labels)
@@ -119,7 +148,7 @@ BOOST_AUTO_TEST_CASE(distinct_labels)
     prover.add("Prover scalar", scalar);
     verifier.add("Verifier scalar", scalar);
 
-    BOOST_CHECK_NE(prover.challenge(), verifier.challenge());
+    BOOST_CHECK_NE(prover.challenge("x"), verifier.challenge("y"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

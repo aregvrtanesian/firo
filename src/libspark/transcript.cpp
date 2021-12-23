@@ -76,17 +76,19 @@ void Transcript::add(const std::string label, const std::vector<unsigned char>& 
 }
 
 // Produce a challenge
-Scalar Transcript::challenge() {
+Scalar Transcript::challenge(const std::string label) {
     unsigned char hash[state.OUTPUT_SIZE];
     unsigned char counter = 0;
     CSHA256 state_counter, state_finalize;
+
+    include_flag(FLAG_CHALLENGE);
+    include_label(label);
 
     while (1) {
         // Prepare temporary state for counter testing
         state_counter = state;
 
         // Embed the counter
-        include_flag(FLAG_CHALLENGE);
         state_counter.Write(&counter, sizeof(counter));
 
         // Finalize the hash with a temporary state

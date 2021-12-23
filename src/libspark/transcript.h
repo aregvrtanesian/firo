@@ -15,7 +15,7 @@ public:
     void add(const std::string, const GroupElement&);
     void add(const std::string, const std::vector<GroupElement>&);
     void add(const std::string, const std::vector<unsigned char>&);
-    Scalar challenge();
+    Scalar challenge(const std::string);
 
 private:
     void size(const std::size_t size_);

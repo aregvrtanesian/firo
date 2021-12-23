@@ -116,8 +116,8 @@ void BPPlus::prove(
     transcript.add("A", proof.A);
 
     // Challenges
-    Scalar y = transcript.challenge();
-    Scalar z = transcript.challenge();
+    Scalar y = transcript.challenge("y");
+    Scalar z = transcript.challenge("z");
     Scalar z_square = z.square();
 
     // Challenge powers
@@ -216,7 +216,7 @@ void BPPlus::prove(
 
         transcript.add("L", L_);
         transcript.add("R", R_);
-        Scalar e = transcript.challenge();
+        Scalar e = transcript.challenge("e");
         Scalar e_inverse = e.inverse();
 
         // Compress round elements
@@ -247,7 +247,7 @@ void BPPlus::prove(
 
     transcript.add("A1", proof.A1);
     transcript.add("B", proof.B);
-    Scalar e1 = transcript.challenge();
+    Scalar e1 = transcript.challenge("e1");
 
     proof.r1 = r_ + a1[0]*e1;
     proof.s1 = s_ + b1[0]*e1;
@@ -337,7 +337,7 @@ bool BPPlus::verify(const std::vector<std::vector<GroupElement>>& C, const std::
         transcript.add("A", proof.A);
 
         // Get challenges
-        Scalar y = transcript.challenge();
+        Scalar y = transcript.challenge("y");
         Scalar y_inverse = y.inverse();
         Scalar y_NM = y;
         for (std::size_t i = 0; i < rounds; i++) {
@@ -345,7 +345,7 @@ bool BPPlus::verify(const std::vector<std::vector<GroupElement>>& C, const std::
         }
         Scalar y_NM_1 = y_NM*y;
 
-        Scalar z = transcript.challenge();
+        Scalar z = transcript.challenge("z");
         Scalar z_square = z.square();
 
         std::vector<Scalar> e;
@@ -353,13 +353,13 @@ bool BPPlus::verify(const std::vector<std::vector<GroupElement>>& C, const std::
         for (std::size_t j = 0; j < rounds; j++) {
             transcript.add("L", proof.L[j]);
             transcript.add("R", proof.R[j]);
-            e.emplace_back(transcript.challenge());
+            e.emplace_back(transcript.challenge("e"));
             e_inverse.emplace_back(e[j].inverse());
         }
 
         transcript.add("A1", proof.A1);
         transcript.add("B", proof.B);
-        Scalar e1 = transcript.challenge();
+        Scalar e1 = transcript.challenge("e1");
         Scalar e1_square = e1.square();
 
         // C_j: -e1**2 * z**(2*(j + 1)) * y**(N*M + 1) * w

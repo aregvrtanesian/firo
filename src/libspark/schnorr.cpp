@@ -15,7 +15,7 @@ Scalar Schnorr::challenge(
     transcript.add("Y", Y);
     transcript.add("A", A);
 
-    return transcript.challenge();
+    return transcript.challenge("c");
 }
 
 void Schnorr::prove(const Scalar& y, const GroupElement& Y, SchnorrProof& proof) {

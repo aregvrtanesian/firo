@@ -224,7 +224,7 @@ void Grootle::prove(
         coefficients.push_back(a[I[0]]);
         coefficients.push_back(sigma[I[0]]);
         for (std::size_t j = 1; j < m; ++j) {
-            LelantusPrimitives::new_factor(sigma[j * n_ + I[j]], a[j * n_ + I[j]], coefficients);
+            convolve(sigma[j*n + I[j]], a[j*n + I[j]], coefficients);
         }
     }
 

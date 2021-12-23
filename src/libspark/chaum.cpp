@@ -18,7 +18,7 @@ Scalar Chaum::challenge(const std::vector<GroupElement>& S, const std::vector<Gr
     transcript.add("A1", A1);
     transcript.add("A2", A2);
 
-    return transcript.challenge();
+    return transcript.challenge("c");
 }
 
 void Chaum::prove(const std::vector<Scalar>& x, const std::vector<Scalar>& y, const std::vector<Scalar>& z, const std::vector<GroupElement>& S, const std::vector<GroupElement>& T, ChaumProof& proof) {
