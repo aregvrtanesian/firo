@@ -96,13 +96,14 @@ Scalar Transcript::challenge(const std::string label) {
         state_finalize.Finalize(hash);
 
         // Check for scalar validity
-        Scalar candidate(hash);
-        if (candidate.isMember()) {
+        Scalar candidate;
+        try {
+            candidate.deserialize(hash);
             state = state_counter;
             return candidate;
+        } catch (...) {
+            counter++;
         }
-
-        counter++;
     }
 }
 
