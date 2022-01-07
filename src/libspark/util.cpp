@@ -1,4 +1,5 @@
 #include "util.h"
+#include <string.h>
 
 namespace spark {
 
@@ -78,12 +79,20 @@ GroupElement SparkUtils::hash_to_group(CSHA256& _hasher) {
         hasher_finalize = hasher_counter;
         const unsigned char ONE = 1;
         hasher_finalize.Write(&ONE, sizeof(ONE));
-        hasher_finalize.Finalize(hash + 32);
+        hasher_finalize.Finalize(hash + 32*sizeof(unsigned char));
+
+        // Assemble the serialized input:
+        //   bytes 0..31: x coordinate
+        //   byte 32: even/odd
+        //   byte 33: zero
+        unsigned char candidate_bytes[34];
+        memcpy(candidate_bytes, hash, 33*sizeof(unsigned char));
+        memcpy(candidate_bytes + 33, &ONE, sizeof(unsigned char));
 
         // Check for group element validity
         GroupElement candidate;
         try {
-            candidate.deserialize(hash);
+            candidate.deserialize(candidate_bytes);
             return candidate;
         } catch (...) {
             // Continue
