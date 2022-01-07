@@ -84,7 +84,7 @@ GroupElement SparkUtils::hash_to_group(CSHA256& _hasher) {
         // Assemble the serialized input:
         //   bytes 0..31: x coordinate
         //   byte 32: even/odd
-        //   byte 33: zero
+        //   byte 33: zero (this point is not infinity)
         unsigned char candidate_bytes[34];
         memcpy(candidate_bytes, hash, 33*sizeof(unsigned char));
         memcpy(candidate_bytes + 33, &ONE, sizeof(unsigned char));

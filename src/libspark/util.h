@@ -13,7 +13,6 @@ const unsigned char HASH_MODE_TRANSCRIPT = 0; // a Fiat-Shamir transcript
 const unsigned char HASH_MODE_GROUP_GENERATOR = 1; // a prime-order group generator derived from a label
 const unsigned char HASH_MODE_FUNCTION = 2; // a scalar-codomain hash function derived from a label
 
-
 class SparkUtils {
 public:
     // Protocol-level hash functions
