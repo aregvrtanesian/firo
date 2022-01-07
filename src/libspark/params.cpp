@@ -1,6 +1,7 @@
 #include "params.h"
 #include "chainparams.h"
-#include <iostream>
+#include "util.h"
+
 namespace spark {
 
     CCriticalSection Params::cs_instance;
@@ -22,25 +23,10 @@ Params const* Params::get_default() {
         std::size_t max_M_range = 16;
 
         // Set the global generators
-        std::string F_string = "SPARK_GENERATOR_F";
-        std::vector<unsigned char> F_chars(F_string.begin(), F_string.end());
-        GroupElement F;
-        F.generate(F_chars.data());
-
-        std::string G_string = "SPARK_GENERATOR_G";
-        std::vector<unsigned char> G_chars(G_string.begin(), G_string.end());
-        GroupElement G;
-        G.generate(G_chars.data());
-
-        std::string H_string = "SPARK_GENERATOR_H";
-        std::vector<unsigned char> H_chars(H_string.begin(), H_string.end());
-        GroupElement H;
-        H.generate(H_chars.data());
-
-        std::string U_string = "SPARK_GENERATOR_U";
-        std::vector<unsigned char> U_chars(U_string.begin(), U_string.end());
-        GroupElement U;
-        U.generate(U_chars.data());
+        GroupElement F = SparkUtils::hash_generator("SPARK_F");
+        GroupElement G = SparkUtils::hash_generator("SPARK_G");
+        GroupElement H = SparkUtils::hash_generator("SPARK_H");
+        GroupElement U = SparkUtils::hash_generator("SPARK_U");
 
         instance.reset(new Params(F, G, H, U, n_grootle, m_grootle, N_range, max_M_range));
         return instance.get();
@@ -61,21 +47,14 @@ Params::Params(const GroupElement& F_, const GroupElement& G_, const GroupElemen
     this->G_range.resize(N_range * max_M_range);
     this->H_range.resize(N_range * max_M_range);
     for (std::size_t i = 0; i < N_range * max_M_range; i++) {
-        std::string G_range_string = "SPARK_GENERATOR_G_RANGE:" + std::to_string(i);
-        std::vector<unsigned char> G_range_chars(G_range_string.begin(), G_range_string.end());
-        this->G_range[i].generate(G_range_chars.data());
-
-        std::string H_range_string = "SPARK_GENERATOR_H_RANGE:" + std::to_string(i);
-        std::vector<unsigned char> H_range_chars(H_range_string.begin(), H_range_string.end());
-        this->H_range[i].generate(H_range_chars.data());
+        this->G_range[i] = SparkUtils::hash_generator("SPARK_G_RANGE:" + std::to_string(i));
+        this->H_range[i] = SparkUtils::hash_generator("SPARK_H_RANGE:" + std::to_string(i));
     }
 
     // One-of-many proof generators
     this->G_grootle.resize(n_grootle * m_grootle);
     for (std::size_t i = 0; i < n_grootle * m_grootle; i++) {
-        std::string G_grootle_string = "SPARK_GENERATOR_G_GROOTLE:" + std::to_string(i);
-        std::vector<unsigned char> G_grootle_chars(G_grootle_string.begin(), G_grootle_string.end());
-        this->G_grootle[i].generate(G_grootle_chars.data());
+        this->G_grootle[i] = SparkUtils::hash_generator("SPARK_G_GROOTLE:" + std::to_string(i));
     }
 }
 
