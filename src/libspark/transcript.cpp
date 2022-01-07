@@ -2,6 +2,8 @@
 #include <secp256k1/include/Scalar.h>
 #include <secp256k1/include/GroupElement.h>
 #include "../../crypto/sha256.h"
+#include "util.h"
+
 namespace spark {
 
 using namespace secp_primitives;
@@ -16,6 +18,7 @@ const unsigned char FLAG_CHALLENGE = 3;
 
 // Initialize a transcript with a domain separator
 Transcript::Transcript(const std::string domain) {
+    include_flag(HASH_MODE_TRANSCRIPT);
     include_flag(FLAG_DOMAIN);
     include_label(domain);
 }
