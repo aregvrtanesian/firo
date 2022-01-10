@@ -1,8 +1,4 @@
 #include "transcript.h"
-#include <secp256k1/include/Scalar.h>
-#include <secp256k1/include/GroupElement.h>
-#include "../../crypto/sha256.h"
-#include "util.h"
 
 namespace spark {
 
@@ -18,7 +14,12 @@ const unsigned char FLAG_CHALLENGE = 3;
 
 // Initialize a transcript with a domain separator
 Transcript::Transcript(const std::string domain) {
-    include_flag(HASH_MODE_TRANSCRIPT);
+    // Prepare the state
+    std::vector<unsigned char> protocol(LABEL_PROTOCOL.begin(), LABEL_PROTOCOL.end());
+    state.Write(protocol.data(), protocol.size());
+    state.Write(&HASH_MODE_TRANSCRIPT, sizeof(HASH_MODE_TRANSCRIPT));
+
+    // Domain separator
     include_flag(FLAG_DOMAIN);
     include_label(domain);
 }

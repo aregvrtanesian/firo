@@ -8,15 +8,38 @@ namespace spark {
 
 using namespace secp_primitives;
 
+// Base protocol separator
+const std::string LABEL_PROTOCOL = "SPARK";
+
 // All hash operations have a mode flag to separate their use cases
 const unsigned char HASH_MODE_TRANSCRIPT = 0; // a Fiat-Shamir transcript
 const unsigned char HASH_MODE_GROUP_GENERATOR = 1; // a prime-order group generator derived from a label
 const unsigned char HASH_MODE_FUNCTION = 2; // a scalar-codomain hash function derived from a label
+const unsigned char HASH_MODE_KDF = 3; // a scalar-codomain key derivation function derived from a label
+
+// Generator labels
+const std::string LABEL_GENERATOR_F = "F";
+const std::string LABEL_GENERATOR_G = "G";
+const std::string LABEL_GENERATOR_H = "H";
+const std::string LABEL_GENERATOR_U = "U";
+const std::string LABEL_GENERATOR_G_RANGE = "G_RANGE";
+const std::string LABEL_GENERATOR_H_RANGE = "H_RANGE";
+const std::string LABEL_GENERATOR_G_GROOTLE = "G_GROOTLE";
+
+// KDF labels
+const std::string LABEL_KDF_SPEND = "SPEND";
+const std::string LABEL_KDF_INCOMING = "INCOMING_VIEW";
+const std::string LABEL_KDF_FULL = "FULL_VIEW";
 
 class SparkUtils {
 public:
     // Protocol-level hash functions
     static GroupElement hash_generator(const std::string label);
+
+    // Key derivation functions
+    static Scalar kdf_spend(const Scalar&);
+    static Scalar kdf_incoming_view(const Scalar&);
+    static Scalar kdf_full_view(const Scalar&);
 
 private:
     // Get a hash in the proper set from raw input

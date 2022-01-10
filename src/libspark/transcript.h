@@ -3,6 +3,8 @@
 #include <secp256k1/include/Scalar.h>
 #include <secp256k1/include/GroupElement.h>
 #include "../../crypto/sha256.h"
+#include "util.h"
+
 namespace spark {
 
 using namespace secp_primitives;

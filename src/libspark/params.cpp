@@ -23,10 +23,10 @@ Params const* Params::get_default() {
         std::size_t max_M_range = 16;
 
         // Set the global generators
-        GroupElement F = SparkUtils::hash_generator("SPARK_F");
-        GroupElement G = SparkUtils::hash_generator("SPARK_G");
-        GroupElement H = SparkUtils::hash_generator("SPARK_H");
-        GroupElement U = SparkUtils::hash_generator("SPARK_U");
+        GroupElement F = SparkUtils::hash_generator(LABEL_GENERATOR_F);
+        GroupElement G = SparkUtils::hash_generator(LABEL_GENERATOR_G);
+        GroupElement H = SparkUtils::hash_generator(LABEL_GENERATOR_H);
+        GroupElement U = SparkUtils::hash_generator(LABEL_GENERATOR_U);
 
         instance.reset(new Params(F, G, H, U, n_grootle, m_grootle, N_range, max_M_range));
         return instance.get();
@@ -47,14 +47,14 @@ Params::Params(const GroupElement& F_, const GroupElement& G_, const GroupElemen
     this->G_range.resize(N_range * max_M_range);
     this->H_range.resize(N_range * max_M_range);
     for (std::size_t i = 0; i < N_range * max_M_range; i++) {
-        this->G_range[i] = SparkUtils::hash_generator("SPARK_G_RANGE:" + std::to_string(i));
-        this->H_range[i] = SparkUtils::hash_generator("SPARK_H_RANGE:" + std::to_string(i));
+        this->G_range[i] = SparkUtils::hash_generator(LABEL_GENERATOR_G_RANGE + " " + std::to_string(i));
+        this->H_range[i] = SparkUtils::hash_generator(LABEL_GENERATOR_H_RANGE + " " + std::to_string(i));
     }
 
     // One-of-many proof generators
     this->G_grootle.resize(n_grootle * m_grootle);
     for (std::size_t i = 0; i < n_grootle * m_grootle; i++) {
-        this->G_grootle[i] = SparkUtils::hash_generator("SPARK_G_GROOTLE:" + std::to_string(i));
+        this->G_grootle[i] = SparkUtils::hash_generator(LABEL_GENERATOR_G_GROOTLE + " " + std::to_string(i));
     }
 }
 

@@ -12,7 +12,9 @@ static_assert(CSHA256::OUTPUT_SIZE == 32);
 GroupElement SparkUtils::hash_generator(const std::string label) {
     CSHA256 hasher;
 
-    // Write the mode
+    // Write the protocol and mode
+    std::vector<unsigned char> protocol(LABEL_PROTOCOL.begin(), LABEL_PROTOCOL.end());
+    hasher.Write(protocol.data(), protocol.size());
     hasher.Write(&HASH_MODE_GROUP_GENERATOR, sizeof(HASH_MODE_GROUP_GENERATOR));
 
     // Write the label
@@ -20,6 +22,18 @@ GroupElement SparkUtils::hash_generator(const std::string label) {
     hasher.Write(bytes.data(), bytes.size());
 
     return hash_to_group(hasher);
+}
+
+// Derive a spend key from a random seed
+Scalar SparkUtils::kdf_spend(const Scalar& seed) {
+    CSHA256 hasher;
+
+    // Write the protocol and mode
+    std::vector<unsigned char> protocol(LABEL_PROTOCOL.begin(), LABEL_PROTOCOL.end());
+    hasher.Write(protocol.data(), protocol.size());
+    hasher.Write(&HASH_MODE_KDF, sizeof(HASH_MODE_KDF));
+
+    // Write the label
 }
 
 // Finalize a hash and map uniformly to a scalar
@@ -87,7 +101,7 @@ GroupElement SparkUtils::hash_to_group(CSHA256& _hasher) {
         //   byte 33: zero (this point is not infinity)
         unsigned char candidate_bytes[34];
         memcpy(candidate_bytes, hash, 33*sizeof(unsigned char));
-        memcpy(candidate_bytes + 33, &ONE, sizeof(unsigned char));
+        memcpy(candidate_bytes + 33, &ZERO, sizeof(unsigned char));
 
         // Check for group element validity
         GroupElement candidate;
