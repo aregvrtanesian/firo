@@ -699,14 +699,17 @@ libspark_a_SOURCES = \
   libspark/chaum_proof.h \
   libspark/chaum.h \
   libspark/chaum.cpp \
-  libspark/bpplus_proof.h \
-  libspark/bpplus.h \
-  libspark/bpplus.cpp \
+  libspark/extended_range_proof.h \
+  libspark/extended_range.h \
+  libspark/extended_range.cpp \
   libspark/grootle_proof.h \
   libspark/grootle.h \
   libspark/grootle.cpp \
   libspark/util.h \
-  libspark/util.cpp
+  libspark/util.cpp \
+  libspark/asset_type_proof.h \
+  libspark/asset_type.h \
+  libspark/asset_type.cpp
 
 liblelantus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 liblelantus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)

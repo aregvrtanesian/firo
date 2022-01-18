@@ -2,19 +2,22 @@
 #define FIRO_LIBSPARK_SCHNORR_H
 
 #include "schnorr_proof.h"
+#include <secp256k1/include/MultiExponent.h>
+#include "transcript.h"
+#include "util.h"
 
 namespace spark {
 
 class Schnorr {
 public:
-    Schnorr(const GroupElement& G);
+    Schnorr(const std::vector<GroupElement>& G);
 
-    void prove(const Scalar& y, const GroupElement& Y, SchnorrProof& proof);
+    void prove(const std::vector<Scalar>& y, const GroupElement& Y, SchnorrProof& proof);
     bool verify(const GroupElement& Y, SchnorrProof& proof);
 
 private:
     Scalar challenge(const GroupElement& Y, const GroupElement& A);
-    const GroupElement& G;
+    const std::vector<GroupElement>& G;
 };
 
 }

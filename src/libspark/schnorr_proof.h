@@ -8,19 +8,19 @@ namespace spark {
 class SchnorrProof{
 public:
     inline std::size_t memoryRequired() const {
-        return 2*Scalar::memoryRequired();
+        return GroupElement::memoryRequired() + t.size()*Scalar::memoryRequired();
     }
 
     ADD_SERIALIZE_METHODS;
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
-        READWRITE(c);
+        READWRITE(A);
         READWRITE(t);
     }
 
 public:
-    Scalar c;
-    Scalar t;
+    GroupElement A;
+    std::vector<Scalar> t;
 };
 }
 

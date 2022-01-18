@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE(completeness)
     H.randomize();
     U.randomize();
 
-    const std::size_t n = 1;
+    const std::size_t n = 3;
 
     std::vector<Scalar> x, y, z;
     x.resize(n);

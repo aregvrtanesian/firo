@@ -93,8 +93,9 @@ BITCOIN_TESTS = \
   libspark/test/transcript_test.cpp \
   libspark/test/schnorr_test.cpp \
   libspark/test/chaum_test.cpp \
-  libspark/test/bpplus_test.cpp \
+  libspark/test/extended_range_test.cpp \
   libspark/test/grootle_test.cpp \
+  libspark/test/asset_type_test.cpp \
   sigma/test/coin_spend_tests.cpp \
   sigma/test/coin_tests.cpp \
   sigma/test/primitives_tests.cpp \

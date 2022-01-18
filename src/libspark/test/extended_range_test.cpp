@@ -1,11 +1,11 @@
-#include "../bpplus.h"
+#include "../extended_range.h"
 
 #include "../../test/test_bitcoin.h"
 #include <boost/test/unit_test.hpp>
 
 namespace spark {
 
-BOOST_FIXTURE_TEST_SUITE(spark_bpplus_tests, BasicTestingSetup)
+BOOST_FIXTURE_TEST_SUITE(spark_extended_range_tests, BasicTestingSetup)
 
 // Generate and verify a single aggregated proof
 BOOST_AUTO_TEST_CASE(completeness_single)
@@ -15,7 +15,8 @@ BOOST_AUTO_TEST_CASE(completeness_single)
     std::size_t M = 4; // aggregation
 
     // Generators
-    GroupElement G, H;
+    GroupElement F, G, H;
+    F.randomize();
     G.randomize();
     H.randomize();
 
@@ -28,7 +29,8 @@ BOOST_AUTO_TEST_CASE(completeness_single)
     }
 
     // Commitments
-    std::vector<Scalar> v, r;
+    std::vector<Scalar> a, v, r;
+    a.resize(M);
     v.resize(M);
     v[0] = Scalar(uint64_t(0));
     v[1] = Scalar(uint64_t(1));
@@ -38,15 +40,16 @@ BOOST_AUTO_TEST_CASE(completeness_single)
     std::vector<GroupElement> C;
     C.resize(M);
     for (std::size_t j = 0; j < M; j++) {
+        a[j].randomize();
         r[j].randomize();
-        C[j] = H*v[j] + G*r[j];
+        C[j] = F*a[j] + G*v[j] + H*r[j];
     }
 
-    BPPlus bpplus(G, H, Gi, Hi, N);
-    BPPlusProof proof;
-    bpplus.prove(v, r, C, proof);
+    ExtendedRange range(F, G, H, Gi, Hi, N);
+    ExtendedRangeProof proof;
+    range.prove(a, v, r, C, proof);
 
-    BOOST_CHECK(bpplus.verify(C, proof));
+    BOOST_CHECK(range.verify(C, proof));
 }
 
 // A single proof with invalid value
@@ -57,7 +60,8 @@ BOOST_AUTO_TEST_CASE(invalid_single)
     std::size_t M = 4; // aggregation
 
     // Generators
-    GroupElement G, H;
+    GroupElement F, G, H;
+    F.randomize();
     G.randomize();
     H.randomize();
 
@@ -70,7 +74,8 @@ BOOST_AUTO_TEST_CASE(invalid_single)
     }
 
     // Commitments
-    std::vector<Scalar> v, r;
+    std::vector<Scalar> a, v, r;
+    a.resize(M);
     v.resize(M);
     v[0] = Scalar(uint64_t(0));
     v[1] = Scalar(uint64_t(1));
@@ -80,15 +85,16 @@ BOOST_AUTO_TEST_CASE(invalid_single)
     std::vector<GroupElement> C;
     C.resize(M);
     for (std::size_t j = 0; j < M; j++) {
+        a[j].randomize();
         r[j].randomize();
-        C[j] = H*v[j] + G*r[j];
+        C[j] = F*a[j] + G*v[j] + H*r[j];
     }
 
-    BPPlus bpplus(G, H, Gi, Hi, N);
-    BPPlusProof proof;
-    bpplus.prove(v, r, C, proof);
+    ExtendedRange range(F, G, H, Gi, Hi, N);
+    ExtendedRangeProof proof;
+    range.prove(a, v, r, C, proof);
 
-    BOOST_CHECK(!bpplus.verify(C, proof));
+    BOOST_CHECK(!range.verify(C, proof));
 }
 
 // Generate and verify a batch of proofs with variable aggregation
@@ -99,7 +105,8 @@ BOOST_AUTO_TEST_CASE(completeness_batch)
     std::size_t B = 4; // number of proofs in batch
 
     // Generators
-    GroupElement G, H;
+    GroupElement F, G, H;
+    F.randomize();
     G.randomize();
     H.randomize();
 
@@ -111,8 +118,8 @@ BOOST_AUTO_TEST_CASE(completeness_batch)
         Hi[i].randomize();
     }
 
-    BPPlus bpplus(G, H, Gi, Hi, N);
-    std::vector<BPPlusProof> proofs;
+    ExtendedRange range(F, G, H, Gi, Hi, N);
+    std::vector<ExtendedRangeProof> proofs;
     proofs.resize(B);
     std::vector<std::vector<GroupElement>> C;
 
@@ -120,22 +127,24 @@ BOOST_AUTO_TEST_CASE(completeness_batch)
     for (std::size_t i = 0; i < B; i++) {
         // Commitments
         std::size_t M = 1 << i;
-        std::vector<Scalar> v, r;
+        std::vector<Scalar> a, v, r;
+        a.resize(M);
         v.resize(M);
         r.resize(M);
         std::vector<GroupElement> C_;
         C_.resize(M);
         for (std::size_t j = 0; j < M; j++) {
+            a[j].randomize();
             v[j] = Scalar(uint64_t(j));
             r[j].randomize();
-            C_[j] = H*v[j] + G*r[j];
+            C_[j] = F*a[j] + G*v[j] + H*r[j];
         }
         C.emplace_back(C_);
 
-        bpplus.prove(v, r, C_, proofs[i]);
+        range.prove(a, v, r, C_, proofs[i]);
     }
 
-    BOOST_CHECK(bpplus.verify(C, proofs));
+    BOOST_CHECK(range.verify(C, proofs));
 }
 
 // An invalid batch of proofs
@@ -146,7 +155,8 @@ BOOST_AUTO_TEST_CASE(invalid_batch)
     std::size_t B = 4; // number of proofs in batch
 
     // Generators
-    GroupElement G, H;
+    GroupElement F, G, H;
+    F.randomize();
     G.randomize();
     H.randomize();
 
@@ -158,8 +168,8 @@ BOOST_AUTO_TEST_CASE(invalid_batch)
         Hi[i].randomize();
     }
 
-    BPPlus bpplus(G, H, Gi, Hi, N);
-    std::vector<BPPlusProof> proofs;
+    ExtendedRange range(F, G, H, Gi, Hi, N);
+    std::vector<ExtendedRangeProof> proofs;
     proofs.resize(B);
     std::vector<std::vector<GroupElement>> C;
 
@@ -167,26 +177,28 @@ BOOST_AUTO_TEST_CASE(invalid_batch)
     for (std::size_t i = 0; i < B; i++) {
         // Commitments
         std::size_t M = 1 << i;
-        std::vector<Scalar> v, r;
+        std::vector<Scalar> a, v, r;
+        a.resize(M);
         v.resize(M);
         r.resize(M);
         std::vector<GroupElement> C_;
         C_.resize(M);
         for (std::size_t j = 0; j < M; j++) {
+            a[j].randomize();
             v[j] = Scalar(uint64_t(j));
             // Set one proof to an out-of-range value;
             if (i == 0 && j == 0) {
                 v[j] = Scalar(std::numeric_limits<uint64_t>::max()) + Scalar(uint64_t(1));
             }
             r[j].randomize();
-            C_[j] = H*v[j] + G*r[j];
+            C_[j] = F*a[j] + G*v[j] + H*r[j];
         }
         C.emplace_back(C_);
 
-        bpplus.prove(v, r, C_, proofs[i]);
+        range.prove(a, v, r, C_, proofs[i]);
     }
 
-    BOOST_CHECK(!bpplus.verify(C, proofs));
+    BOOST_CHECK(!range.verify(C, proofs));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

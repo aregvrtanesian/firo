@@ -3,6 +3,7 @@
 #include <secp256k1/include/Scalar.h>
 #include <secp256k1/include/GroupElement.h>
 #include "../../crypto/sha256.h"
+#include "../util.h"
 
 namespace spark {
 
@@ -30,6 +31,11 @@ const std::string LABEL_GENERATOR_G_GROOTLE = "G_GROOTLE";
 const std::string LABEL_KDF_SPEND = "SPEND";
 const std::string LABEL_KDF_INCOMING = "INCOMING_VIEW";
 const std::string LABEL_KDF_FULL = "FULL_VIEW";
+
+// Component transcript labels
+const std::string LABEL_TRANSCRIPT_EXTENDED_RANGE_PROOF = "EXTENDED_RANGE_PROOF";
+const std::string LABEL_TRANSCRIPT_ASSET_TYPE_PROOF = "ASSET_TYPE_PROOF";
+const std::string LABEL_TRANSCRIPT_SCHNORR_PROOF = "SCHNORR_PROOF";
 
 class SparkUtils {
 public:
