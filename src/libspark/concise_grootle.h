@@ -3,7 +3,6 @@
 
 #include "concise_grootle_proof.h"
 #include <secp256k1/include/MultiExponent.h>
-#include <random>
 #include "util.h"
 
 namespace spark {

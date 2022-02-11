@@ -2,6 +2,7 @@
 
 #include "../../test/test_bitcoin.h"
 #include <boost/test/unit_test.hpp>
+#include <chrono>
 
 namespace spark {
 
@@ -19,9 +20,9 @@ BOOST_FIXTURE_TEST_SUITE(spark_concise_grootle_tests, BasicTestingSetup)
 BOOST_AUTO_TEST_CASE(batch)
 {
     // Parameters
-    const std::size_t n = 4;
-    const std::size_t m = 3;
-    const std::size_t N = (std::size_t) std::pow(n, m); // N = 64
+    const std::size_t n = 16;
+    const std::size_t m = 4;
+    const std::size_t N = (std::size_t) std::pow(n, m);
 
     // Generators
     GroupElement H;
@@ -30,13 +31,13 @@ BOOST_AUTO_TEST_CASE(batch)
     std::vector<GroupElement> Hi = random_group_vector(n*m);
 
     // Commitments
-    std::size_t commit_size = 60; // require padding
+    std::size_t commit_size = N; // require padding
     std::vector<GroupElement> S = random_group_vector(commit_size);
     std::vector<GroupElement> V = random_group_vector(commit_size);
 
     // Generate valid commitments to zero
     std::vector<std::size_t> indexes = { 0, 1, 3, 59 };
-    std::vector<std::size_t> sizes = { 60, 60, 59, 16 };
+    std::vector<std::size_t> sizes = { N, N, N, N };
     std::vector<GroupElement> S1, V1;
     std::vector<Scalar> s, v;
     for (std::size_t index : indexes) {
@@ -76,7 +77,10 @@ BOOST_AUTO_TEST_CASE(batch)
         BOOST_CHECK(grootle.verify(S, S1[i], V, V1[i], sizes[i], proofs.back()));
     }
 
+    auto start = std::chrono::high_resolution_clock::now();
     BOOST_CHECK(grootle.verify(S, S1, V, V1, sizes, proofs));
+    auto stop = std::chrono::high_resolution_clock::now();
+    printf("Concise timing (us): %ld\n", std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count());
 }
 
 BOOST_AUTO_TEST_CASE(invalid_batch)
