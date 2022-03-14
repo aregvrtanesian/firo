@@ -92,4 +92,12 @@ void SigmaPrimitives<Exponent, GroupElement>::new_factor(
     coefficients[0] *= a;
 }
 
+    template<class Exponent, class GroupElement>
+    GroupElement SigmaPrimitives<Exponent, GroupElement>::HelperFunction(
+            const std::vector<GroupElement>& commits,
+            const std::vector <Exponent>& x) {
+        secp_primitives::MultiExponent mult(commits, x);
+        return mult.get_multiple();
+    }
+
 } // namespace aura

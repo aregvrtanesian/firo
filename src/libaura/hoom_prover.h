@@ -15,7 +15,7 @@ public:
                     const std::vector<GroupElement>& h_gens,
                     int t_n, int t_m, int m_n, int m_m);
     void proof(const std::vector<GroupElement>& commits,
-               const Exponent& r,
+               const Exponent& l,
                HOOMProof<Exponent, GroupElement>& proof_out);
 
 private:

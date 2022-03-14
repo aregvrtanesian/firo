@@ -2,7 +2,7 @@
 #define FIRO_AURA_SIGMA_R1_PROOF_GENERATOR_H
 
 #include "r1_proof.h"
-#include "sigma_primitives.h"
+#include "aura_primitives.h"
 
 namespace aura {
 

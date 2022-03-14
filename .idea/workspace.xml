@@ -11,8 +11,12 @@
   <component name="ChangeListManager">
     <list default="true" id="4f739bf9-44bd-4a74-87cc-b6c9bf938d6c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Makefile.test.include" beforeDir="false" afterPath="$PROJECT_DIR$/src/Makefile.test.include" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Makefile.am" beforeDir="false" afterPath="$PROJECT_DIR$/src/Makefile.am" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/hoom_prover.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_prover.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/hoom_verifier.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_verifier.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/r1_proof_generator.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/r1_proof_generator.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/sigma_primitives.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/sigma_primitives.hpp" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +72,9 @@
       <workItem from="1645793089793" duration="650000" />
       <workItem from="1645815443080" duration="666000" />
       <workItem from="1645971884029" duration="4959000" />
-      <workItem from="1646173939519" duration="28637000" />
+      <workItem from="1646173939519" duration="32714000" />
+      <workItem from="1646917139792" duration="5791000" />
+      <workItem from="1647089296533" duration="15350000" />
     </task>
     <servers />
   </component>

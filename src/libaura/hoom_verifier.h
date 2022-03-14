@@ -32,6 +32,6 @@ private:
 
 } // namespace aura
 
-#include "sigmaplus_verifier.hpp"
+#include "hoom_verifier.hpp"
 
 #endif // FIRO_AURA_HOOM_VERIFIER_H

@@ -765,8 +765,8 @@ libaura_a_SOURCES = \
   libaura/sigmaplus_prover.hpp \
   libaura/sigmaplus_verifier.h \
   libaura/sigmaplus_verifier.hpp \
-  libaura/sigma_primitives.h \
-  libaura/sigma_primitives.hpp \
+  libaura/aura_primitives.h \
+  libaura/aura_primitives.hpp \
   libaura/params.h\
   libaura/params.cpp
   

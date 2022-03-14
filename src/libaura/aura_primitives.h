@@ -47,10 +47,12 @@ public:
      */
     static void new_factor(const Exponent& x, const Exponent& a, std::vector<Exponent>& coefficients);
 
+    static GroupElement HelperFunction(const std::vector<GroupElement>& commits, const std::vector <Exponent>& x);
+
     };
 
 } // namespace aura
 
-#include "sigma_primitives.hpp"
+#include "aura_primitives.hpp"
 
 #endif // FIRO_AURA_SIGMA_SIGMA_PRIMITIVES_H
