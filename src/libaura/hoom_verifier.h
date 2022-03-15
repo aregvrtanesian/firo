@@ -9,7 +9,7 @@ template<class Exponent, class GroupElement>
 class HOOMVerifier{
 
 public:
-    SigmaPlusVerifier(const GroupElement& g,
+    HOOMVerifier(const GroupElement& g,
                       const std::vector<GroupElement>& h_gens,
                       int t_n, int t_m, int m_n, int m_m);
 
@@ -18,7 +18,7 @@ public:
 
     bool batch_verify(const std::vector<GroupElement>& commits,
                       const std::vector<Exponent>& serials,
-                      const std::vector<SigmaPlusProof<Exponent, GroupElement>>& proofs) const;
+                      const std::vector<HOOMProof<Exponent, GroupElement>>& proofs) const;
 
 
 private:

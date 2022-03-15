@@ -10,13 +10,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f739bf9-44bd-4a74-87cc-b6c9bf938d6c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/libaura/test/hoom_tests.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Makefile.am" beforeDir="false" afterPath="$PROJECT_DIR$/src/Makefile.am" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Makefile.test.include" beforeDir="false" afterPath="$PROJECT_DIR$/src/Makefile.test.include" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/hoom_proof.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_proof.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/hoom_prover.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_prover.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/hoom_prover.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_prover.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/hoom_verifier.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_verifier.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/r1_proof_generator.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/r1_proof_generator.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/sigma_primitives.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/sigma_primitives.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/hoom_verifier.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_verifier.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/test/protocol_tests.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/test/protocol_tests.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,9 +55,9 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
   </component>
@@ -74,7 +76,8 @@
       <workItem from="1645971884029" duration="4959000" />
       <workItem from="1646173939519" duration="32714000" />
       <workItem from="1646917139792" duration="5791000" />
-      <workItem from="1647089296533" duration="15350000" />
+      <workItem from="1647089296533" duration="16635000" />
+      <workItem from="1647330087959" duration="20734000" />
     </task>
     <servers />
   </component>

@@ -98,6 +98,7 @@ BITCOIN_TESTS = \
   sigma/test/serialize_test.cpp \
   sigma/test/sigma_primitive_types_test.cpp \
   libaura/test/protocol_tests.cpp \
+  libaura/test/hoom_tests.cpp \
   test/addrman_tests.cpp \
   test/allocator_tests.cpp \
   test/amount_tests.cpp \

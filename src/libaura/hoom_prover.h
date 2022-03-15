@@ -8,14 +8,15 @@
 namespace aura {
 
 template <class Exponent, class GroupElement>
-class HierarchicOOMProver{
+class HOOMProver{
 
 public:
-    HierarchicOOMProver(const GroupElement& g,
+    HOOMProver(const GroupElement& g,
                     const std::vector<GroupElement>& h_gens,
                     int t_n, int t_m, int m_n, int m_m);
     void proof(const std::vector<GroupElement>& commits,
-               const Exponent& l,
+               const int& l,
+               const Exponent& r,
                HOOMProof<Exponent, GroupElement>& proof_out);
 
 private:

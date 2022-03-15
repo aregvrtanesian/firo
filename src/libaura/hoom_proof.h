@@ -19,28 +19,28 @@ public:
 
 public:
     HOOMProof(int t_n_, int t_m_, int m_n_, int m_m_):
-        t_n_(t_n_), t_m_(t_m_) m_n_(m_n_), m_m_(m_m_) {};
+        t_n_(t_n_), t_m_(t_m_), m_n_(m_n_), m_m_(m_m_), d_Proof_(m_n_, m_m_), D_Proof_(t_n_, t_m_) {};
 
 public:
-    bool operator==(const SigmaPlusProof& other) const {
+    bool operator==(const HOOMProof& other) const {
         return t_n_ == other.t_n_ &&
             t_m_ == other.t_m_ &&
             m_n_ == other.t_n_ &&
             m_m_ == other.t_m_ &&
             d_ == other.d_ &&
             d_Proof_ == other.d_Proof_ &&
-            D_Proof_ == other.D_Proof_ &&
+            D_Proof_ == other.D_Proof_;
     }
 
-    bool operator!=(const SigmaPlusProof& other) const {
+    bool operator!=(const HOOMProof& other) const {
         return !(*this == other);
     }
 
 public:
     inline int memoryRequired() const {
         return d_.memoryRequired()
-               + d_Proof_.memoryRequired(n, m)
-               + D_Proof_.memoryRequired(n, m);
+               + d_Proof_.memoryRequired(m_n_, m_m_)
+               + D_Proof_.memoryRequired(t_n_, t_m_);
     }
 
 /*    inline unsigned char* serialize(unsigned char* buffer) const {
