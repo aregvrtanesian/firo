@@ -21,10 +21,10 @@ namespace aura {
         std::vector <Exponent> x;
         x.resize(m_);
         for (int k = 0; k < m_; ++k) {
-            SigmaPrimitives<Exponent, GroupElement>::generate_challenge(group_elements, x[k]);
+//            SigmaPrimitives<Exponent, GroupElement>::generate_challenge(group_elements, x[k]);
+            x[k] = uint64_t(124);
             group_elements.push_back(h_[0] * x[k]);
         }
-        
         std::vector <GroupElement> C_;
         C_.resize(m_);
         std::vector <GroupElement> D_;
@@ -33,10 +33,14 @@ namespace aura {
         D = SigmaPrimitives<Exponent, GroupElement>::HelperFunction(proof.d_, x);
 
         for (int k = 0; k < t_; ++k) {
-            std::copy(commits.begin() + k * m_, commits.begin() + (k + 1) * m_ - 1, C_.begin());
-            D_[k] = SigmaPrimitives<Exponent, GroupElement>::HelperFunction(C_, x) + D * -1;
+            std::copy(commits.begin() + k * m_, commits.begin() + (k + 1) * m_, C_.begin());
+            D_[k] = D + SigmaPrimitives<Exponent, GroupElement>::HelperFunction(C_, x).inverse();
         }
-        return d_verifier.verify(proof.d_, proof.d_Proof_, true) && D_verifier.verify(D_, proof.D_Proof_, true);
+        if(!d_verifier.verify(proof.d_, proof.d_Proof_, true) && D_verifier.verify(D_, proof.D_Proof_, true)) {
+            LogPrintf("Hierarchic one out of many proof failed due to final check failed.");
+            return false;
+        }
+        return true;
     }
 
 } // namespace aura

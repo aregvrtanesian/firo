@@ -34,31 +34,27 @@ namespace aura {
         secp_primitives::GroupElement c;
         secp_primitives::Scalar zero(uint64_t(0));
         aura::SigmaPlusProver<secp_primitives::Scalar,secp_primitives::GroupElement> d_prover(g_, h_, m_n_, m_m_);
-        d_prover.proof(proof_out.d_, l - ptr, r, true, proof_out.d_Proof_);
+        d_prover.proof(proof_out.d_, l % m_, r_[l % m_] + r, true, proof_out.d_Proof_);
         std::vector<Exponent> x;
         x.resize(m_);
-
+        std::Scalar xsum = uint64_t(0);
         std::vector<GroupElement> group_elements = {g_, h_[0] * t_n_, h_[0] * t_m_, h_[0] * m_n_, h_[0] * m_m_};
         group_elements.insert(group_elements.end(), proof_out.d_.begin(), proof_out.d_.end());
         for (int k = 0; k < m_; ++k) {
-            SigmaPrimitives<Exponent, GroupElement>::generate_challenge(group_elements, x[k]);
+//            SigmaPrimitives<Exponent, GroupElement>::generate_challenge(group_elements, x[k]);
+            x[k] = uint64_t(124);
             group_elements.push_back(h_[0] * x[k]);
+            xsum += x[k] * r_[k];
         }
-        std::vector<GroupElement> C_;
-        C_.resize(m_);
         std::vector<GroupElement> D_;
         D_.resize(t_);
         GroupElement D;
         D = SigmaPrimitives<Exponent, GroupElement>::HelperFunction(proof_out.d_, x);
         for (int k = 0; k < t_; ++k) {
-            std::copy(commits.begin() + k * m_, commits.begin() + (k + 1) * m_ - 1, C_.begin());
-            D_[k] = SigmaPrimitives<Exponent, GroupElement>::HelperFunction(C_, x) + D * -1;
+            D_[k] = D + SigmaPrimitives<Exponent, GroupElement>::HelperFunction({commits.begin() + k * m_, commits.begin() + (k + 1) * m_}, x).inverse();
         }
-
         aura::SigmaPlusProver<secp_primitives::Scalar,secp_primitives::GroupElement> D_prover(g_, h_, t_n_, t_m_);
-        aura::SigmaPlusProof<secp_primitives::Scalar,secp_primitives::GroupElement> D_proof(t_n_, t_m_);
-        D_prover.proof(D_, l / m_, r, true, D_proof);
-        proof_out.D_Proof_ = D_proof;
+        D_prover.proof(D_, l / m_, xsum, true, proof_out.D_Proof_);
 
     }
 

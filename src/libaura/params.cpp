@@ -25,15 +25,24 @@ Params* Params::get_default() {
         //fixing n and m; N = n^m = 16,384
         int n = 4;
         int m = 7;
-        instance = new Params(g, n, m);
+        int t_n = 4;
+        int t_m = 7;
+        int m_n = 4;
+        int m_m = 7;
+        instance = new Params(g, n, m, t_m, t_n, m_m, m_n);
         return instance;
     }
 }
 
-Params::Params(const GroupElement& g, int n, int m) :
+Params::Params(const GroupElement& g, int n, int m, int t_n, int t_m, int m_n, int m_m) :
     g_(g),
     m_(m),
-    n_(n)
+    n_(n),
+    t_m_(t_m),
+    t_n_(t_n),
+    m_m_(m_m),
+    m_n_(m_n)
+
 {
     unsigned char buff0[32] = {0};
     g.sha256(buff0);
@@ -70,5 +79,16 @@ uint64_t Params::get_n() const{
 uint64_t Params::get_m() const{
     return m_;
 }
-
+    uint64_t Params::get_t_n() const{
+        return t_n_;
+    }
+    uint64_t Params::get_t_m() const{
+        return t_m_;
+    }
+    uint64_t Params::get_m_n() const{
+        return m_n_;
+    }
+    uint64_t Params::get_m_m() const{
+        return m_m_;
+    }
 } //namespace aura

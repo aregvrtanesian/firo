@@ -1,6 +1,7 @@
 #ifndef FIRO_AURA_HOOM_PROVER_H
 #define FIRO_AURA_HOOM_PROVER_H
 
+#include "sigmaplus_prover.h"
 #include "hoom_proof.h"
 
 #include <cstddef>

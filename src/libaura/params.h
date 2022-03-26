@@ -16,9 +16,13 @@ public:
     const std::vector<GroupElement>& get_h() const;
     uint64_t get_n() const;
     uint64_t get_m() const;
+    uint64_t get_t_n() const;
+    uint64_t get_t_m() const;
+    uint64_t get_m_n() const;
+    uint64_t get_m_m() const;
 
 private:
-   Params(const GroupElement& g, int n, int m);
+   Params(const GroupElement& g, int n, int m, int t_n, int t_m, int m_n, int m_m);
     ~Params();
 
 private:
@@ -27,6 +31,10 @@ private:
     std::vector<GroupElement> h_;
     int m_;
     int n_;
+    int t_m_;
+    int t_n_;
+    int m_m_;
+    int m_n_;
 };
 
 }//namespace aura

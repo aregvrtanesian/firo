@@ -12,11 +12,11 @@ BOOST_FIXTURE_TEST_SUITE(aura_hoom_protocol_tests, ZerocoinTestingSetup200)
 
 BOOST_AUTO_TEST_CASE(one_out_of_n)
 {
-    int N = 16384;
+    int N = 65536;
     int t_n = 2;
     int t_m = 3;
-    int m_n = 2;
-    int m_m = 3;
+    int m_n = 3;
+    int m_m = 4;
     int index = 20;
 
     secp_primitives::GroupElement g;

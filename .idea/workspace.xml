@@ -10,14 +10,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f739bf9-44bd-4a74-87cc-b6c9bf938d6c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/libaura/test/hoom_tests.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Makefile.test.include" beforeDir="false" afterPath="$PROJECT_DIR$/src/Makefile.test.include" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/aura_primitives.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/aura_primitives.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/aura_primitives.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/aura_primitives.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/hoom_proof.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_proof.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/hoom_prover.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_prover.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/hoom_prover.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_prover.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/hoom_verifier.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_verifier.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/hoom_verifier.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_verifier.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/params.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/params.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/params.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/params.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/r1_proof.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/r1_proof.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/r1_proof_generator.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/r1_proof_generator.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/r1_proof_generator.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/r1_proof_generator.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/r1_proof_verifier.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/r1_proof_verifier.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/r1_proof_verifier.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/r1_proof_verifier.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/sigmaplus_proof.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/sigmaplus_proof.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/sigmaplus_prover.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/sigmaplus_prover.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/sigmaplus_prover.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/sigmaplus_prover.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/sigmaplus_verifier.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/sigmaplus_verifier.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/sigmaplus_verifier.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/sigmaplus_verifier.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/libaura/test/hoom_tests.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/test/hoom_tests.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/test/protocol_tests.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/test/protocol_tests.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -37,6 +50,9 @@
         <entry key="$PROJECT_DIR$" value="RE_IMPORT" />
       </map>
     </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="256Keyjjs9Jch0SkNs9QddFHp9e" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -78,6 +94,9 @@
       <workItem from="1646917139792" duration="5791000" />
       <workItem from="1647089296533" duration="16635000" />
       <workItem from="1647330087959" duration="20734000" />
+      <workItem from="1648147985442" duration="75000" />
+      <workItem from="1648149018899" duration="329000" />
+      <workItem from="1648156442612" duration="14139000" />
     </task>
     <servers />
   </component>
