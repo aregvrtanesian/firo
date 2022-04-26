@@ -19,6 +19,7 @@ void SigmaPlusProver<Exponent, GroupElement>::proof(
         std::size_t l,
         const Exponent& r,
         bool fPadding,
+        Exponent challenge,
         SigmaPlusProof<Exponent, GroupElement>& proof_out) {
     std::size_t setSize = commits.size();
     assert(setSize > 0);
@@ -125,14 +126,14 @@ void SigmaPlusProver<Exponent, GroupElement>::proof(
     proof_out.Gk_ = Gk;
 
     // Compute value of challenge X, then continue R1 proof and sigma final response proof.
-    std::vector<GroupElement> group_elements = {
+    std::vector<GroupElement> group_elements = {h_[0] * challenge,
         proof_out.r1Proof_.A_, proof_out.B_, proof_out.r1Proof_.C_, proof_out.r1Proof_.D_};
 
     group_elements.insert(group_elements.end(), Gk.begin(), Gk.end());
     Exponent x;
     SigmaPrimitives<Exponent, GroupElement>::generate_challenge(group_elements, x);
     r1prover.generate_final_response(a, x, proof_out.r1Proof_);
-
+    challenge = x;
     //computing z
     Exponent z;
     z = r * x.exponent(uint64_t(m_));

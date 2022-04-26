@@ -18,6 +18,7 @@ public:
                std::size_t l,
                const Exponent& r,
                bool fPadding,
+               Exponent challenge,
                SigmaPlusProof<Exponent, GroupElement>& proof_out);
 
 private:

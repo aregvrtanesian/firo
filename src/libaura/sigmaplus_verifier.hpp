@@ -15,10 +15,84 @@ SigmaPlusVerifier<Exponent, GroupElement>::SigmaPlusVerifier(
 }
 
 template<class Exponent, class GroupElement>
+bool SigmaPlusVerifier<Exponent, GroupElement>::calculate_batch(
+        const std::vector<GroupElement>& commits,
+        const SigmaPlusProof<Exponent, GroupElement>& proof,
+        GroupElement& t,
+        std::vector<Exponent>& f_i_,
+        GroupElement& zero_commit,
+        Exponent challenge) const {
+
+    f_i_.clear();
+    GroupElement t2;
+    t = t2;
+
+    R1ProofVerifier<Exponent, GroupElement> r1ProofVerifier(g_, h_, proof.B_, n, m);
+    std::vector<Exponent> f;
+    const R1Proof<Exponent, GroupElement>& r1Proof = proof.r1Proof_;
+    if (!r1ProofVerifier.verify(r1Proof, f, true /* Skip verification of final response */)) {
+        LogPrintf("Sigma spend failed due to r1 proof incorrect.");
+        return false;
+    }
+    if (!proof.B_.isMember() || proof.B_.isInfinity()) {
+        LogPrintf("Sigma spend failed due to value of B outside of group.");
+        return false;
+    }
+
+    const std::vector <GroupElement>& Gk = proof.Gk_;
+    for (int k = 0; k < m; ++k) {
+        if (!Gk[k].isMember() || Gk[k].isInfinity()) {
+            LogPrintf("Sigma spend failed due to value of GK[i] outside of group.");
+            return false;
+        }
+    }
+
+    // Compute value of challenge X, then continue R1 proof and sigma final response proof.
+    std::vector<GroupElement> group_elements = {h_[0] * challenge,
+        r1Proof.A_, proof.B_, r1Proof.C_, r1Proof.D_};
+
+    group_elements.insert(group_elements.end(), Gk.begin(), Gk.end());
+    Exponent challenge_x;
+    SigmaPrimitives<Exponent, GroupElement>::generate_challenge(group_elements, challenge_x);
+    challenge = challenge_x;
+
+    // Now verify the final response of r1 proof. Values of "f" are finalized only after this call.
+    if (!r1ProofVerifier.verify_final_response(r1Proof, challenge_x, f)) {
+        LogPrintf("Sigma spend failed due to incorrect final response.");
+        return false;
+    }
+
+    if(!proof.z_.isMember() || proof.z_.isZero()) {
+        LogPrintf("Sigma spend failed due to value of Z outside of group.");
+        return false;
+    }
+
+    if (commits.empty()) {
+        LogPrintf("No mints in the anonymity set");
+        return false;
+    }
+
+    std::size_t N = commits.size();
+    f_i_.resize(N);
+
+    compute_fis(m, f, f_i_);
+
+    Exponent x_k(uint64_t(1));
+    for(int k = 0; k < m; ++k){
+        t += (Gk[k] * (x_k.negate()));
+        x_k *= challenge_x;
+    }
+
+    zero_commit = SigmaPrimitives<Exponent, GroupElement>::commit(g_, Exponent(uint64_t(0)), h_[0], proof.z_);
+    return true;
+}
+
+template<class Exponent, class GroupElement>
 bool SigmaPlusVerifier<Exponent, GroupElement>::verify(
         const std::vector<GroupElement>& commits,
         const SigmaPlusProof<Exponent, GroupElement>& proof,
-        bool fPadding) const {
+        bool fPadding,
+        Exponent challenge) const {
 
     R1ProofVerifier<Exponent, GroupElement> r1ProofVerifier(g_, h_, proof.B_, n, m);
     std::vector<Exponent> f;
@@ -42,12 +116,13 @@ bool SigmaPlusVerifier<Exponent, GroupElement>::verify(
     }
 
     // Compute value of challenge X, then continue R1 proof and sigma final response proof.
-    std::vector<GroupElement> group_elements = {
-        r1Proof.A_, proof.B_, r1Proof.C_, r1Proof.D_};
+    std::vector<GroupElement> group_elements = {h_[0] * challenge,
+                                                r1Proof.A_, proof.B_, r1Proof.C_, r1Proof.D_};
 
     group_elements.insert(group_elements.end(), Gk.begin(), Gk.end());
     Exponent challenge_x;
     SigmaPrimitives<Exponent, GroupElement>::generate_challenge(group_elements, challenge_x);
+    challenge = challenge_x;
 
     // Now verify the final response of r1 proof. Values of "f" are finalized only after this call.
     if (!r1ProofVerifier.verify_final_response(r1Proof, challenge_x, f)) {
@@ -115,13 +190,11 @@ bool SigmaPlusVerifier<Exponent, GroupElement>::verify(
         t2 += (Gk[k] * (x_k.negate()));
         x_k *= challenge_x;
     }
-
     GroupElement left(t1 + t2);
     if (left != SigmaPrimitives<Exponent, GroupElement>::commit(g_, Exponent(uint64_t(0)), h_[0], proof.z_)) {
         LogPrintf("Sigma spend failed due to final proof verification failure.");
         return false;
     }
-
     return true;
 }
 

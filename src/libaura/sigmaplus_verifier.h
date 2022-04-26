@@ -15,13 +15,22 @@ public:
 
     bool verify(const std::vector<GroupElement>& commits,
                 const SigmaPlusProof<Exponent, GroupElement>& proof,
-                bool fPadding) const;
+                bool fPadding,
+                Exponent challenge) const;
 
     bool batch_verify(const std::vector<GroupElement>& commits,
                       const std::vector<Exponent>& serials,
                       const std::vector<bool>& fPadding,
                       const std::vector<size_t>& setSizes,
                       const std::vector<SigmaPlusProof<Exponent, GroupElement>>& proofs) const;
+
+
+    bool calculate_batch(const std::vector<GroupElement>& commits,
+                         const SigmaPlusProof<Exponent, GroupElement>& proof,
+                         GroupElement& t,
+                         std::vector<Exponent>& f_i_,
+                         GroupElement& zero_commit,
+                         Exponent challenge) const;
 
     bool membership_checks(const SigmaPlusProof<Exponent, GroupElement>& proof) const;
     bool compute_fs(const SigmaPlusProof<Exponent, GroupElement>& proof, const Exponent& x, std::vector<Exponent>& f_) const;

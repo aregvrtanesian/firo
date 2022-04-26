@@ -11,26 +11,13 @@
   <component name="ChangeListManager">
     <list default="true" id="4f739bf9-44bd-4a74-87cc-b6c9bf938d6c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/aura_primitives.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/aura_primitives.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/aura_primitives.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/aura_primitives.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/hoom_proof.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_proof.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/hoom_prover.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_prover.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output.txt" beforeDir="false" afterPath="$PROJECT_DIR$/output.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/hoom_prover.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_prover.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/hoom_verifier.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_verifier.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/hoom_verifier.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_verifier.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/params.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/params.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/params.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/params.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/r1_proof.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/r1_proof.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/r1_proof_generator.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/r1_proof_generator.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/r1_proof_generator.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/r1_proof_generator.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/r1_proof_verifier.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/r1_proof_verifier.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/r1_proof_verifier.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/r1_proof_verifier.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/sigmaplus_proof.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/sigmaplus_proof.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/sigmaplus_prover.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/sigmaplus_prover.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/sigmaplus_prover.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/sigmaplus_prover.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/sigmaplus_verifier.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/sigmaplus_verifier.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/sigmaplus_verifier.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/sigmaplus_verifier.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/test/hoom_tests.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/test/hoom_tests.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/test/protocol_tests.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/test/protocol_tests.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -97,6 +84,26 @@
       <workItem from="1648147985442" duration="75000" />
       <workItem from="1648149018899" duration="329000" />
       <workItem from="1648156442612" duration="14139000" />
+      <workItem from="1648995096012" duration="1855000" />
+      <workItem from="1649007887469" duration="599000" />
+      <workItem from="1649013551812" duration="6732000" />
+      <workItem from="1649078127365" duration="5124000" />
+      <workItem from="1649153630417" duration="1455000" />
+      <workItem from="1649360015869" duration="6888000" />
+      <workItem from="1649432860897" duration="9308000" />
+      <workItem from="1649610126102" duration="6652000" />
+      <workItem from="1649676269906" duration="5000" />
+      <workItem from="1649757189348" duration="4871000" />
+      <workItem from="1649957315137" duration="599000" />
+      <workItem from="1650030837323" duration="16611000" />
+      <workItem from="1650350599548" duration="13800000" />
+      <workItem from="1650561360553" duration="599000" />
+      <workItem from="1650614363890" duration="1944000" />
+      <workItem from="1650654183590" duration="13304000" />
+      <workItem from="1650809663102" duration="304000" />
+      <workItem from="1650835217517" duration="3000" />
+      <workItem from="1650865894051" duration="20298000" />
+      <workItem from="1650968805758" duration="2508000" />
     </task>
     <servers />
   </component>
