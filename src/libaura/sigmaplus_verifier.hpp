@@ -23,10 +23,6 @@ bool SigmaPlusVerifier<Exponent, GroupElement>::calculate_batch(
         GroupElement& zero_commit,
         Exponent challenge) const {
 
-    f_i_.clear();
-    GroupElement t2;
-    t = t2;
-
     R1ProofVerifier<Exponent, GroupElement> r1ProofVerifier(g_, h_, proof.B_, n, m);
     std::vector<Exponent> f;
     const R1Proof<Exponent, GroupElement>& r1Proof = proof.r1Proof_;

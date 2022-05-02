@@ -14,9 +14,6 @@
       <change beforePath="$PROJECT_DIR$/output.txt" beforeDir="false" afterPath="$PROJECT_DIR$/output.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/hoom_prover.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_prover.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/hoom_verifier.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/hoom_verifier.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/sigmaplus_prover.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/sigmaplus_prover.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/sigmaplus_prover.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/sigmaplus_prover.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/libaura/sigmaplus_verifier.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/sigmaplus_verifier.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/sigmaplus_verifier.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/sigmaplus_verifier.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/libaura/test/protocol_tests.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/libaura/test/protocol_tests.cpp" afterDir="false" />
     </list>
@@ -103,7 +100,11 @@
       <workItem from="1650809663102" duration="304000" />
       <workItem from="1650835217517" duration="3000" />
       <workItem from="1650865894051" duration="20298000" />
-      <workItem from="1650968805758" duration="2508000" />
+      <workItem from="1650968805758" duration="3108000" />
+      <workItem from="1651258510641" duration="599000" />
+      <workItem from="1651337712834" duration="2666000" />
+      <workItem from="1651430891486" duration="3574000" />
+      <workItem from="1651470776494" duration="5887000" />
     </task>
     <servers />
   </component>
